@@ -1,11 +1,10 @@
 import { useFonts } from 'expo-font';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Header from './components/common/header';
-import Search from './components/common/search';
-import ItemCard from './components/home/item-card';
-import { lightColors } from './theme/colors';
 import { fontFiles } from './theme/fonts';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './pages/home';
+import { Text } from 'react-native';
+import Navbar from './components/common/navbar';
 
 export default function App() {
 
@@ -13,31 +12,21 @@ export default function App() {
   const [fontsLoaded] = useFonts(fontFiles);
   if (!fontsLoaded) return null;
 
+  const Stack = createNativeStackNavigator();
+
+  let navigationOptions = {
+    headerBackButtonMenuEnabled: false,
+    headerShown: false,
+  }
+
   return (
-    <View style={styles.container}>
-      <SafeAreaView>
-        <StatusBar style="auto" />
-        <Header></Header>
-        <Search></Search>
-        <ScrollView horizontal={true} style={styles.itemList} >
-          <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-          <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-          <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-          <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-          <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+    <>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name='home' options={navigationOptions} component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <Navbar></Navbar>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: lightColors.background,
-    height: '100%',
-    padding: 20,
-  },
-  itemList: {
-    width: '100%',
-  }
-});
