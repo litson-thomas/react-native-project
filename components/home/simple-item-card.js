@@ -4,8 +4,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
 
-const ItemCard = ({ navigation }) => {
-    
+const SimpleItemCard = ({ navigation }) => {
+
     const [borderColor, setBorderColor] = useState(lightColors.light);
 
     const onCardClick = () => {
@@ -19,82 +19,64 @@ const ItemCard = ({ navigation }) => {
     return (
         <TouchableOpacity onPressIn={onCardClick} onPressOut={onCardPressOut} onPress={() => {navigation.navigate('DetailModal')}}>
             <View style={{...styles.cardWrapper, ...{borderWidth: 2, borderColor: borderColor}}}>
-                <View style={styles.header}>
-                    <View style={styles.ratingWrapper}>
-                        <Text style={styles.rating}>4.3</Text>
-                        <FontAwesome name="star" size={15} color={lightColors.primary} />
-                    </View>
-                    <TouchableOpacity>
-                        <FontAwesome name="heart-o" size={20} color={lightColors.primary} />
-                    </TouchableOpacity>
-                </View>
                 <Image style={styles.image} source={require('../../assets/images/shoe.png')}/>
                 <View style={styles.detailsWrapper}>
                     <Text style={styles.title}>Nike Air Max</Text>
                     <Text style={styles.subTitle}>Regular Shoes</Text>
-                    <Text style={styles.price}>$120</Text>
                 </View>
+                <Text style={styles.price}>$120</Text>
             </View>
         </TouchableOpacity>
     );
 }
 
-export default ItemCard;
+export default SimpleItemCard;
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        backgroundColor: lightColors.light,
         borderRadius: lightColors.borderRadius,
-        padding: 20,
-        marginBottom: 20,
-        marginTop: 20,
-        width: 220,
-    },
-    header: {
+        backgroundColor: lightColors.light,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    ratingWrapper: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    rating: {
-        color: lightColors.primary,
-        marginRight: 5,
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 15,
     },
     image: {
-        width: '100%',
-        height: 120,
-        margin: 10,
+        width: 80,
+        height: 80,
+        borderRadius: lightColors.borderRadius,
+        backgroundColor: lightColors.light,
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
     },
     detailsWrapper: {
-        textAlign: 'center',
-        width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        flexGrow: 1,
+        marginLeft: 5,
+        marginRight: 10,
     },
     title: {
-        color: lightColors.primary,
         fontSize: 15,
-        fontWeight: 'bold',
+        fontFamily: commonStyles.fontMedium,
+        color: lightColors.dark,
     },
     subTitle: {
-        color: lightColors.darkGrey,
-        fontSize: 12,
+        fontSize: 13,
         fontFamily: commonStyles.fontRegular,
-        marginBottom: 10,
+        color: lightColors.darkGrey,
     },
     price: {
-        color: lightColors.primary,
-        fontSize: 18,
-        fontFamily: commonStyles.fontMedium,
-    },
-
+        fontSize: 15,
+        fontFamily: commonStyles.fontSemiBold,
+        color: lightColors.dark,
+        marginRight: 20,
+    }
 });

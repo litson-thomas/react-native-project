@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 const Search = () => {
     return (
         <View style={styles.inputWrapper}>
-            <TextInput placeholder='Search here..' style={styles.input} onChangeText={() => {}} />
+            <TextInput placeholder='Search for products..' style={styles.input} onChangeText={() => {}} />
             <Feather name="search" size={23} style={styles.icon} color={lightColors.grey} />
         </View>
     );
@@ -23,6 +23,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: lightColors.light,
         borderRadius: lightColors.borderRadius,
+        marginLeft: 20,
+        marginRight: 20,
     },
     input: {
         backgroundColor: lightColors.light,

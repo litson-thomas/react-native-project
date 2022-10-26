@@ -3,9 +3,12 @@ import { fontFiles } from './theme/fonts';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './pages/home';
+import HomeScreen from './pages/home-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { lightColors } from './theme/colors';
+import SearchScreen from './pages/search-screen';
+import CartScreen from './pages/cart-screen';
+import PersonScreen from './pages/person-screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +31,7 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name="TabNavigator" component={TabNavigator} options={navigationOptions} />
           <Stack.Group screenOptions={{  }}>
-            <Stack.Screen name="DetailModal" component={Home} />
+            <Stack.Screen name="DetailModal" component={HomeScreen} options={navigationOptions}/>
           </Stack.Group>
         </Stack.Navigator>  
       </NavigationContainer>
@@ -52,9 +55,9 @@ function TabNavigator(){
         tabBarInactiveTintColor: lightColors.grey,
       })
     }>
-    <Tab.Screen name="Home"  component={Home} options={navigationOptions} />
-    <Tab.Screen name="Search" component={Home} options={navigationOptions}/>
-    <Tab.Screen name="Cart" component={Home} options={navigationOptions}/>
-    <Tab.Screen name="Person" component={Home} options={navigationOptions}/>
+    <Tab.Screen name="Home"  component={HomeScreen} options={navigationOptions} />
+    <Tab.Screen name="Search" component={SearchScreen} options={navigationOptions}/>
+    <Tab.Screen name="Cart" component={CartScreen} options={navigationOptions}/>
+    <Tab.Screen name="Person" component={PersonScreen} options={navigationOptions}/>
   </Tab.Navigator>
 }
