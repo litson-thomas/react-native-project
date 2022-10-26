@@ -4,12 +4,13 @@ import { FontAwesome } from '@expo/vector-icons';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
 
-const ItemCard = () => {
+const ItemCard = ({ navigation }) => {
     
     const [borderColor, setBorderColor] = useState(lightColors.light);
 
     const onCardClick = () => {
         setBorderColor(lightColors.primary);
+        navigation.navigate('DetailModal');
     }
 
     const onCardPressOut = () => {

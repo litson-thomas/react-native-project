@@ -6,7 +6,7 @@ import ItemCard from '../components/home/item-card';
 import Header from '../components/common/header';
 import { StatusBar } from 'expo-status-bar';
 
-const Home = () => {
+const Home = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -14,11 +14,11 @@ const Home = () => {
                 <Header></Header>
                 <Search></Search>
                 <ScrollView horizontal={true} style={styles.itemList} >
-                    <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-                    <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-                    <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-                    <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
-                    <View style={{marginRight: 20}}><ItemCard></ItemCard></View>
+                    <View style={{marginRight: 20}}><ItemCard navigation={navigation}></ItemCard></View>
+                    <View style={{marginRight: 20}}><ItemCard navigation={navigation}></ItemCard></View>
+                    <View style={{marginRight: 20}}><ItemCard navigation={navigation}></ItemCard></View>
+                    <View style={{marginRight: 20}}><ItemCard navigation={navigation}></ItemCard></View>
+                    <View style={{marginRight: 20}}><ItemCard navigation={navigation}></ItemCard></View>
                 </ScrollView>
             </SafeAreaView>
         </View>
