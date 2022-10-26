@@ -7,15 +7,16 @@ import Header from '../components/common/header';
 import { StatusBar } from 'expo-status-bar';
 import TitleLink from '../components/common/title-link';
 import SimpleItemCard from '../components/home/simple-item-card';
+import Featured from '../components/home/featured';
 
 const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <StatusBar style="auto" backgroundColor='transparent' translucent={true}/>
             <SafeAreaView>
+                <StatusBar style="auto"/>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Header></Header>
-                    <Search></Search>
+                    <Featured navigation={navigation}></Featured>
                     <ScrollView horizontal={true} style={styles.itemList} showsHorizontalScrollIndicator={false}>
                         <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
                         <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
