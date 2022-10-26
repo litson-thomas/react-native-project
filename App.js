@@ -9,6 +9,7 @@ import { lightColors } from './theme/colors';
 import SearchScreen from './pages/search-screen';
 import CartScreen from './pages/cart-screen';
 import PersonScreen from './pages/person-screen';
+import DetailScreen from './pages/details-screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +32,7 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name="TabNavigator" component={TabNavigator} options={navigationOptions} />
           <Stack.Group screenOptions={{  }}>
-            <Stack.Screen name="DetailModal" component={HomeScreen} options={navigationOptions}/>
+            <Stack.Screen name="DetailModal" component={DetailScreen} options={navigationOptions}/>
           </Stack.Group>
         </Stack.Navigator>  
       </NavigationContainer>
