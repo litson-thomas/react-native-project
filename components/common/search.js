@@ -4,10 +4,10 @@ import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
 import { Feather } from '@expo/vector-icons'; 
 
-const Search = () => {
+const Search = ({searchString,onSearch}) => {
     return (
         <View style={styles.inputWrapper}>
-            <TextInput placeholder='Search for products..' style={styles.input} onChangeText={() => {}} />
+            <TextInput placeholder='Enter product name' style={styles.input} value={searchString} onChangeText={onSearch.bind(this)} />
             <Feather name="search" size={23} style={styles.icon} color={lightColors.grey} />
         </View>
     );
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: lightColors.light,
         borderRadius: lightColors.borderRadius,
-        marginLeft: 20,
-        marginRight: 20,
+        // marginLeft: 20,
+        // marginRight: 20,
     },
     input: {
         backgroundColor: lightColors.light,
