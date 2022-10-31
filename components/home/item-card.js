@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
         backgroundColor: lightColors.light,
         borderRadius: lightColors.borderRadius,
         padding: 20,
-        marginBottom: 20,
-        marginTop: 20,
-        width: 220,
+        marginBottom: 0,
+        marginTop: 10,
+        width: 200,
     },
     header: {
         display: 'flex',
