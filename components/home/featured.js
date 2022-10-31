@@ -13,14 +13,16 @@ const Featured = ({ navigation }) => {
 
     let [item, setItem] = useState(DATA[0]);
     let interval = null;
+    let itemIndex = 0;
 
     useEffect(() => {
-        let itemIndex = 0;
         interval = setInterval(() => {
-            itemIndex += 1;
+            // loop through the items
+            itemIndex++;
             if (itemIndex > DATA.length - 1) itemIndex = 0;
             setItem(DATA[itemIndex]);
-        }, 5000);
+        }, 2500);
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -55,9 +57,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
-        width: 230,
-        height: 230,
+        width: 180,
+        height: 180,
         resizeMode: 'contain',
+        marginRight: 10,
     },
     textContainer: {
         width: '100%',
@@ -65,10 +68,12 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontSize: 50,
+        width: '80%',
+        fontSize: 40,
+        color: lightColors.dark,
         fontFamily: commonStyles.fontExtraBold,
-        letterSpacing: -2,
-        lineHeight: 50,
+        letterSpacing: -1,
+        lineHeight: 40,
         paddingTop: 10,
     },
     price: {
@@ -80,11 +85,10 @@ const styles = StyleSheet.create({
         marginBottom: -10,
     },
     subTitle: {
-        fontSize: 20,
-        fontFamily: commonStyles.fontMedium,
+        fontSize: 15,
+        fontFamily: commonStyles.fontRegular,
         color: lightColors.darkGrey,
         letterSpacing: -1,
-        lineHeight: 20,
-        paddingTop: 10,
+        paddingTop: 5,
     },
 });
