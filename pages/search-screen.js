@@ -41,7 +41,7 @@ const SearchScreen = ({ navigation, route }) => {
   const [productSizes, setProductSizes] = useState(SIZES);
 
   // ! Replace Customer Id with user id
-  const customerId = "d23cba09-99d5-479c-a09c-5bc58c7da06d";
+  const userId = "d23cba09-99d5-479c-a09c-5bc58c7da06d";
 
   const onSearch = (item) => {
     setSearchString(item);
@@ -61,7 +61,7 @@ const SearchScreen = ({ navigation, route }) => {
       const insertFavourite = async () => {
         const { error } = await supabase.from("favourite").insert({
           product: data.id,
-          customer: customerId,
+          user: userId,
         });
       };
       const result = insertFavourite().catch(console.error);
@@ -72,7 +72,7 @@ const SearchScreen = ({ navigation, route }) => {
           .from("favourite")
           .delete()
           .eq("product", data.id)
-          .eq("customer", customerId);
+          .eq("user", userId);
       };
       const result = deleteFavourite().catch(console.error);
       setFavouriteProducts(favouriteProducts.filter((a) => a !== data.id));
@@ -121,7 +121,7 @@ const SearchScreen = ({ navigation, route }) => {
       const { data, error } = await supabase
         .from("favourite")
         .select(`product`)
-        .eq("customer", customerId);
+        .eq("user", userId);
       setFavouriteProducts(data.map((a) => a.product));
     };
     const resultsFavourties = fetchFavourites().catch(console.error);
