@@ -8,14 +8,16 @@ import { StatusBar } from 'expo-status-bar';
 import TitleLink from '../components/common/title-link';
 import SimpleItemCard from '../components/home/simple-item-card';
 import Featured from '../components/home/featured';
+import { useSelector } from 'react-redux';
 
 const HomeScreen = ({ navigation }) => {
+    const { userFirstName } = useSelector((state) => state.userReducer);
     return (
         <View style={styles.container}>
             <SafeAreaView>
                 <StatusBar style="auto"/>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <Header></Header>
+                {userFirstName && <Header user={userFirstName}></Header> }
                     <Featured navigation={navigation}></Featured>
                     <ScrollView horizontal={true} style={styles.itemList} showsHorizontalScrollIndicator={false}>
                         <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
