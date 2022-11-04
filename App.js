@@ -15,6 +15,7 @@ import { LightHaptics } from "./helpers/common";
 import { Provider } from "react-redux";
 import { Store } from "./redux/store";
 import LoginScreen from "./pages/login-screen";
+import SignUpScreen from "./pages/signup-screen";
 
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +55,11 @@ export default function App() {
             <Stack.Screen
               name="LoginModal"
               component={LoginScreen}
+              options={navigationOptions}
+            />
+            <Stack.Screen
+              name="SignUpModal"
+              component={SignUpScreen}
               options={navigationOptions}
             />
           </Stack.Group>

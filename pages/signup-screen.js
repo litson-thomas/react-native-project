@@ -17,60 +17,75 @@ import {
   setUserLastName,
   setUserRole,
 } from "../redux/actions";
-import BackButton from "../components/common/back-button";
+import BackButton from '../components/common/back-button';
 
-const LoginScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
+  //const [authUser, setAuthUser] = useState();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("vergel.delacruz@jll.com");
+  const [password, setPassword] = useState("password");
+  const [firstName, setFirstName] = useState("Elon");
+  const [lastName, setLastName] = useState("Musk");
 
-  const onLogin = async () => {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.signInWithPassword({
+  //const [auth, setAuth] = useState(true);
+  const onSignUp = async () => {
+    const { data, error } = await supabase.auth.signUp({
       email: email, //"c0835208@mylambton.ca"
       password: password,
     });
     if (error) {
       console.log(error);
-      alert("Invalid Credentials. Please try again");
-      setEmail("");
-      setPassword("");
+      alert("Something went wrong. Please try again");
     } else {
-      const { data, error } = await supabase
-        .from("user")
-        .select(`*`)
-        .eq("id", user.id)
-        .single();
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Succesfully log in " + data.first_name);
-        dispatch(setUserId(data.id));
-        dispatch(setUserFirstName(data.first_name));
-        dispatch(setUserLastName(data.last_name));
-        dispatch(setUserRole(data.role));
-        navigation.navigate("Home");
-      }
+      console.log("Succesfully sign up user id " + data.user.id);
+      const { error } = await supabase.from("user").insert({
+        id: data.user.id,
+        first_name: firstName,
+        last_name: lastName,
+        role: "Member",
+      });
+      dispatch(setUserId(data.id));
+      dispatch(setUserFirstName(firstName));
+      dispatch(setUserLastName(lastName));
+      dispatch(setUserRole("Member"));
+      navigation.navigate("Home");
     }
+    //console.log("Succesfully logged in user id " + user.id);
   };
 
-  const onSignUp = () => {
-    navigation.navigate("SignUpModal");
+  const onExistingUser = () => {
+    navigation.navigate("LoginModal");
   };
-
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
         <BackButton navigation={navigation}></BackButton>
-        <Text style={styles.title}>Login to Continue</Text>
+
+        <Text style={styles.title}>Sign up</Text>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>First Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Your First Name"
+            value={firstName}
+            onChangeText={(a) => setFirstName(a)}
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Your Last Name"
+            value={lastName}
+            onChangeText={(a) => setLastName(a)}
+          />
+        </View>
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="eg. abcd@gmail.com"
+            placeholder="Your Email"
             value={email}
             onChangeText={(a) => setEmail(a)}
           />
@@ -84,12 +99,12 @@ const LoginScreen = ({ navigation }) => {
             onChangeText={(a) => setPassword(a)}
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={onLogin}>
-          <Text style={styles.buttonLabel}>Login</Text>
+        <TouchableOpacity style={styles.button} onPress={onSignUp}>
+          <Text style={styles.buttonLabel}>Register</Text>
         </TouchableOpacity>
         <View style={styles.linksWrapper}>
-          <TouchableOpacity onPress={onSignUp}>
-            <Text>New User?</Text>
+          <TouchableOpacity onPress={onExistingUser}>
+            <Text>Existing User?</Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <Text>Forgot Password?</Text>
@@ -100,7 +115,7 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
-export default LoginScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
