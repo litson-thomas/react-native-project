@@ -41,6 +41,7 @@ const PersonScreen = ({ navigation }) => {
       <StatusBar style="auto" />
       <SafeAreaView>
         <Text>Person</Text>
+        <View style={styles.buttonWrapper}>
         {userId === "" ? (
           <TouchableOpacity style={styles.button} onPress={onLogin}>
             <Text style={styles.buttonLabel}>Login</Text>
@@ -50,6 +51,7 @@ const PersonScreen = ({ navigation }) => {
             <Text style={styles.buttonLabel}>Logout</Text>
           </TouchableOpacity>
         )}
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -66,6 +68,9 @@ const styles = StyleSheet.create({
   },
   itemList: {
     width: "100%",
+  },
+  buttonWrapper: {
+    marginTop: 10,
   },
   button: {
     width: "100%",
