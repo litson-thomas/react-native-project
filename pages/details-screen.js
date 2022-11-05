@@ -14,14 +14,9 @@ const DetailScreen = ({ navigation, route }) => {
     const [productSizes, setProductSizes] = useState([]);
     const [product, setProduct] = useState([]);
 
-
-
     useEffect(() => {
         fetchProduct();
-
-    }, [
-
-    ]);
+    }, []);
 
     const renderProductSizes = (data) => {
         return (
@@ -54,8 +49,6 @@ const DetailScreen = ({ navigation, route }) => {
             .select(`*`)
             .eq("id", id);
         setProduct(data[0]);
-
-
     };
 
     return (

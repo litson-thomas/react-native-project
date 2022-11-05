@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
 
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         width: '100%', 
         alignItems: 'center', 
         flexDirection: 'row',
-        marginTop: 15,
+        marginTop: 50,
         marginBottom: 15,
         paddingLeft: 20,
         paddingRight: 20,
