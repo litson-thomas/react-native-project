@@ -48,8 +48,8 @@ const ProductCard = ({ data, favouriteProducts,  onFavourite, navigation }) => {
           }}
         />
         <View style={styles.detailsWrapper}>
-          <Text style={styles.title}>{data.name}</Text>
-          <Text style={styles.subTitle}>{data.description}</Text>
+          <Text style={styles.title} numberOfLines={2}>{data.name}</Text>
+          <Text style={styles.subTitle} numberOfLines={2}>{data.description}</Text>
           <Text style={styles.price}>${data.price}</Text>
         </View>
       </View>
@@ -65,8 +65,9 @@ const styles = StyleSheet.create({
     borderRadius: lightColors.borderRadius,
     padding: 20,
     marginBottom: 0,
-    marginTop: 10,
+    marginTop: 15,
     width: "100%",
+    height: 320,
   },
   header: {
     display: "flex",
@@ -102,16 +103,20 @@ const styles = StyleSheet.create({
     color: lightColors.primary,
     fontSize: 15,
     fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 5,
   },
   subTitle: {
     color: lightColors.darkGrey,
     fontSize: 12,
     fontFamily: commonStyles.fontRegular,
     marginBottom: 10,
+    textAlign: "center",
   },
   price: {
     color: lightColors.primary,
     fontSize: 18,
     fontFamily: commonStyles.fontMedium,
+    textAlign: "center",
   },
 });

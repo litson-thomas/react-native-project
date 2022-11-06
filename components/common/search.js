@@ -7,7 +7,9 @@ import { Feather } from '@expo/vector-icons';
 const Search = ({searchString,onSearch}) => {
     return (
         <View style={styles.inputWrapper}>
-            <TextInput placeholder='Enter product name' style={styles.input} value={searchString} onChangeText={onSearch.bind(this)} />
+            <TextInput 
+            placeholderTextColor={lightColors.grey}
+            placeholder='Enter product name' style={styles.input} value={searchString} onChangeText={onSearch.bind(this)} />
             <Feather name="search" size={23} style={styles.icon} color={lightColors.grey} />
         </View>
     );

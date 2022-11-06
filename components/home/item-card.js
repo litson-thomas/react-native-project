@@ -31,7 +31,7 @@ const ItemCard = ({ navigation }) => {
                 <Image style={styles.image} source={require('../../assets/images/shoe.png')}/>
                 <View style={styles.detailsWrapper}>
                     <Text style={styles.title}>Nike Air Max</Text>
-                    <Text style={styles.subTitle}>Regular Shoes</Text>
+                    <Text style={styles.subTitle} numberOfLines={3}>Regular Shoes</Text>
                     <Text style={styles.price}>$120</Text>
                 </View>
             </View>

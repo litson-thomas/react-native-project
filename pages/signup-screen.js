@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import {
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -57,61 +58,63 @@ const SignUpScreen = ({ navigation }) => {
     navigation.navigate("LoginModal");
   };
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <SafeAreaView>
-        <BackButton navigation={navigation}></BackButton>
+    <ScrollView>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <SafeAreaView>
+            <BackButton navigation={navigation}></BackButton>
 
-        <Text style={styles.title}>Sign up</Text>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>First Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Your First Name"
-            value={firstName}
-            onChangeText={(a) => setFirstName(a)}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Last Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Your Last Name"
-            value={lastName}
-            onChangeText={(a) => setLastName(a)}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Your Email"
-            value={email}
-            onChangeText={(a) => setEmail(a)}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            placeholder="Your Password"
-            style={styles.input}
-            value={password}
-            onChangeText={(a) => setPassword(a)}
-          />
-        </View>
-        <TouchableOpacity style={styles.button} onPress={onSignUp}>
-          <Text style={styles.buttonLabel}>Register</Text>
-        </TouchableOpacity>
-        <View style={styles.linksWrapper}>
-          <TouchableOpacity onPress={onExistingUser}>
-            <Text>Existing User?</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Forgot Password?</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </View>
+            <Text style={styles.title}>Sign up</Text>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>First Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Your First Name"
+                value={firstName}
+                onChangeText={(a) => setFirstName(a)}
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>Last Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Your Last Name"
+                value={lastName}
+                onChangeText={(a) => setLastName(a)}
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Your Email"
+                value={email}
+                onChangeText={(a) => setEmail(a)}
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Your Password"
+                style={styles.input}
+                value={password}
+                onChangeText={(a) => setPassword(a)}
+              />
+            </View>
+            <TouchableOpacity style={styles.button} onPress={onSignUp}>
+              <Text style={styles.buttonLabel}>Register</Text>
+            </TouchableOpacity>
+            <View style={styles.linksWrapper}>
+              <TouchableOpacity onPress={onExistingUser}>
+                <Text>Existing User?</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text>Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
+        </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 };
 

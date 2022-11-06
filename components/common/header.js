@@ -4,6 +4,7 @@ import { lightColors } from "../../theme/colors";
 import { commonStyles } from "../../theme/styles";
 
 const Header = ({ user }) => {
+  
   return (
     <View style={styles.container}>
       <View>

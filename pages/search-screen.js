@@ -259,7 +259,7 @@ const SearchScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ flex: 9 }}>
+        <View style={{ flex: 11, marginHorizontal: 20, }}>
           {loading ? (
             <ActivityIndicator
               style={styles.loader}
@@ -275,6 +275,7 @@ const SearchScreen = ({ navigation, route }) => {
               ListHeaderComponent={header()}
               stickyHeaderHiddenOnScroll={true}
               stickyHeaderIndices={[0]}
+              showsVerticalScrollIndicator={false}
               horizontal={false}
               numColumns={2}
               data={products}
@@ -309,7 +310,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: lightColors.background,
     marginTop: 60,
-    marginHorizontal: 20,
     display: "flex",
     flex: 1,
   },
