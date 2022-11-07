@@ -6,6 +6,7 @@ export const lightColors = {
     dark: '#212121',
     grey: '#BDBDBD',
     darkGrey: '#828282',
+    lightGrey: '#E0E0E0',
     borderRadius: 5,
 };
 

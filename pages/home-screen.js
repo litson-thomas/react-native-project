@@ -15,22 +15,27 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <SafeAreaView>
-                <StatusBar style="auto"/>
+                <StatusBar style="auto" />
                 <ScrollView showsVerticalScrollIndicator={false}>
-                {userFirstName && <Header user={userFirstName}></Header> }
+                    {userFirstName && <Header user={userFirstName}></Header>}
                     <Featured navigation={navigation}></Featured>
                     <ScrollView horizontal={true} style={styles.itemList} showsHorizontalScrollIndicator={false}>
-                        <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
-                        <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
-                        <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
-                        <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
-                        <View style={{marginLeft: 20}}><ItemCard navigation={navigation}></ItemCard></View>
+                        <View style={{ marginLeft: 20 }}><ItemCard navigation={navigation}></ItemCard></View>
+                        <View style={{ marginLeft: 20 }}><ItemCard navigation={navigation}></ItemCard></View>
+                        <View style={{ marginLeft: 20 }}><ItemCard navigation={navigation}></ItemCard></View>
+                        <View style={{ marginLeft: 20 }}><ItemCard navigation={navigation}></ItemCard></View>
+                        <View style={{ marginLeft: 20 }}><ItemCard navigation={navigation}></ItemCard></View>
                     </ScrollView>
                     <TitleLink title={'Top Selling Products'} url={'DetailModal'} navigation={navigation}></TitleLink>
-                    <SimpleItemCard navigation={navigation}></SimpleItemCard>
-                    <SimpleItemCard navigation={navigation}></SimpleItemCard>
-                    <SimpleItemCard navigation={navigation}></SimpleItemCard>
-                    <SimpleItemCard navigation={navigation}></SimpleItemCard>
+                    {
+                        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                            return (
+                                <View key={index} style={{ marginBottom: 20 }}>
+                                    <SimpleItemCard navigation={navigation}></SimpleItemCard>
+                                </View>
+                            )
+                        })
+                    }
                 </ScrollView>
             </SafeAreaView>
         </View>
