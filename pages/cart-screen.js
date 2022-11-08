@@ -3,7 +3,8 @@ import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { lightColors } from '../theme/colors';
 import { StatusBar } from 'expo-status-bar';
 import BackButton from '../components/common/back-button';
-import FavItemCard from '../components/home/fav-item-card';
+import FavItemCard from '../components/home/cart-item-card';
+import CartDetails from '../components/home/cart-details';
 
 const CartScreen = ({ navigation }) => {
     return (
@@ -14,12 +15,18 @@ const CartScreen = ({ navigation }) => {
                 {
                     [1, 2].map((item, index) => {
                         return (
-                            <View key={index} style={{ marginBottom: 20 }}>
+                            <><View key={index} style={{ marginBottom: 20 }}>
                                 <FavItemCard navigation={navigation}></FavItemCard>
-                            </View>
+                            </View></>
+
+
+
                         )
                     })
+
                 }
+                <CartDetails></CartDetails>
+
             </SafeAreaView>
         </View >
     );
@@ -70,4 +77,5 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
     },
+
 });
