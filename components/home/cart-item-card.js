@@ -34,6 +34,9 @@ const SimpleItemCard = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
         </View>
+
+
+
     );
 }
 
