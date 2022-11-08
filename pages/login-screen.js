@@ -16,6 +16,7 @@ import {
   setUserFirstName,
   setUserLastName,
   setUserRole,
+  setUserEmail,
 } from "../redux/actions";
 import BackButton from "../components/common/back-button";
 
@@ -51,6 +52,9 @@ const LoginScreen = ({ navigation }) => {
         dispatch(setUserFirstName(data.first_name));
         dispatch(setUserLastName(data.last_name));
         dispatch(setUserRole(data.role));
+        dispatch(setUserEmail(email));
+        dispatch(setUserImage(data.image));
+
         navigation.navigate("Home");
       }
     }
