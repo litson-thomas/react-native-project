@@ -16,6 +16,7 @@ import CategoryList from "../components/search/category-list";
 import SearchHint from "../components/search/search-hint";
 import SearchButtons from "../components/search/search-buttons";
 import ProductCard from "../components/search/product-card";
+import { useSelector } from 'react-redux';
 
 const SearchScreen = ({ navigation, route }) => {
   const [searchString, setSearchString] = useState("");
@@ -30,6 +31,7 @@ const SearchScreen = ({ navigation, route }) => {
 
   const [price, setPrice] = useState(initialPrice);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const { userId } = useSelector((state) => state.userReducer);
 
   const SIZES = [
     { name: "XS", isChecked: false },
@@ -39,9 +41,6 @@ const SearchScreen = ({ navigation, route }) => {
     { name: "XL", isChecked: false },
   ];
   const [productSizes, setProductSizes] = useState(SIZES);
-
-  // ! Replace Customer Id with user id
-  const userId = "d23cba09-99d5-479c-a09c-5bc58c7da06d";
 
   const onSearch = (item) => {
     setSearchString(item);

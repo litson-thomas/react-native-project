@@ -16,7 +16,8 @@ import AdminScreen from "../pages/admin/admin-screen";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/initSupabase";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserFirstName, setUserId, setUserLastName, setUserRole } from "../redux/actions";
+import { setUserEmail, setUserFirstName, setUserId, setUserLastName, setUserRole, setUserImage } from "../redux/actions";
+import MyProfileScreen from "../pages/my-profile-screen";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -76,6 +77,8 @@ export const AppNavigation = () => {
         dispatch(setUserFirstName(data.first_name));
         dispatch(setUserLastName(data.last_name));
         dispatch(setUserRole(data.role));
+        dispatch(setUserEmail(user?.email));
+        dispatch(setUserImage(data.image));
       }
     }
 
@@ -89,6 +92,8 @@ export const AppNavigation = () => {
       dispatch(setUserFirstName(""));
       dispatch(setUserLastName(""));
       dispatch(setUserRole(""));
+      dispatch(setUserEmail(""));
+      dispatch(setUserImage(""));
     }
 
   }, [user]);
@@ -120,6 +125,12 @@ export const AppNavigation = () => {
               <Stack.Screen
                 name="AdminPanel"
                 component={AdminScreen}
+                listeners={{ focus: () => LightHaptics() }}
+                options={navigationOptions}
+              />
+              <Stack.Screen
+                name="MyProfileModal"
+                component={MyProfileScreen}
                 listeners={{ focus: () => LightHaptics() }}
                 options={navigationOptions}
               />
