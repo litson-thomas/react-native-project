@@ -4,6 +4,7 @@ export const SET_USER_ID = 'SET_USER_ID';
 export const SET_USER_ROLE = 'SET_USER_ROLE';
 export const SET_USER_EMAIL = 'SET_USER_EMAIL';
 export const SET_USER_IMAGE = 'SET_USER_IMAGE';
+export const SET_USER_FAVOURITES = 'SET_USER_FAVOURITES';
 
 export const setUserFirstName = userFirstName => dispatch => {
     dispatch({
@@ -44,5 +45,12 @@ export const setUserImage = userImage => dispatch => {
     dispatch({
         type: SET_USER_IMAGE,
         payload: userImage,
+    });
+};
+
+export const setUserFavourites = userFavourites => dispatch => {
+    dispatch({
+        type: SET_USER_FAVOURITES,
+        payload: userFavourites,
     });
 };
