@@ -18,6 +18,7 @@ import { supabase } from "../utils/initSupabase";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserEmail, setUserFirstName, setUserId, setUserLastName, setUserRole, setUserImage } from "../redux/actions";
 import MyProfileScreen from "../pages/my-profile-screen";
+import MyFavouritesScreen from "../pages/my-favourites-screen";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -173,6 +174,7 @@ function TabNavigator() {
           else if (route.name === "Search") iconName = "search";
           else if (route.name === "Person") iconName = "user";
           else if (route.name === "Cart") iconName = "shopping-cart";
+          else if (route.name === "Favourite") iconName = "heart";
           return <Feather name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: lightColors.primary,
@@ -192,6 +194,11 @@ function TabNavigator() {
       <Tab.Screen
         name="Cart"
         component={CartScreen}
+        options={navigationOptions}
+      />
+      <Tab.Screen
+        name="Favourite"
+        component={MyFavouritesScreen}
         options={navigationOptions}
       />
       <Tab.Screen
