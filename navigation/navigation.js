@@ -34,7 +34,7 @@ export const AppNavigation = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
+
     // check if user is logged in
     // from the local storage
     const checkSession = async () => {
@@ -49,12 +49,12 @@ export const AppNavigation = () => {
     // listen for auth changes
     supabase.auth.onAuthStateChange(async (event, session) => {
       // if user is logged in
-      if(session && session.user) {
+      if (session && session.user) {
         setUser(session.user)
         setSessionInfoInLocal(session);
       }
       // if user is not logged in
-      else{
+      else {
         setUser(null)
         removeSessionInfoFromLocal();
       }
@@ -72,7 +72,7 @@ export const AppNavigation = () => {
         .select(`*`)
         .eq("id", user?.id)
         .single();
-      if (error) console.log(error); 
+      if (error) console.log(error);
       else {
         dispatch(setUserId(data.id));
         dispatch(setUserFirstName(data.first_name));
@@ -84,11 +84,11 @@ export const AppNavigation = () => {
     }
 
     // if user is logged in
-    if(user){
+    if (user) {
       setUserState(user.user);
     }
     // if user is not logged in
-    else{
+    else {
       dispatch(setUserId(""));
       dispatch(setUserFirstName(""));
       dispatch(setUserLastName(""));
@@ -135,6 +135,7 @@ export const AppNavigation = () => {
                 listeners={{ focus: () => LightHaptics() }}
                 options={navigationOptions}
               />
+
             </>
           )
         }
@@ -164,7 +165,7 @@ export const AppNavigation = () => {
 
 // Tabs navigator component
 function TabNavigator() {
-  
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

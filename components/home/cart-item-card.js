@@ -3,8 +3,10 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
+import Constants from "expo-constants";
 
-const SimpleItemCard = ({ navigation }) => {
+const CartItemCard = ({ navigation, route, item }) => {
+    console.log(item);
 
     const [borderColor, setBorderColor] = useState(lightColors.light);
 
@@ -18,17 +20,21 @@ const SimpleItemCard = ({ navigation }) => {
 
     return (
         <View style={{ ...styles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
-            <Image style={styles.image} source={require('../../assets/images/shoe.png')} />
+
+
+            <Image style={styles.image} source={{
+                uri: `${Constants.expoConfig.extra.productUrl}/${item.produtList.images}`,
+            }} />
             <View style={styles.detailsWrapper}>
-                <Text style={styles.title}>Nike Air Max</Text>
-                <Text style={styles.price}>$290</Text>
+                <Text style={styles.title}>{item.produtList.name}</Text>
+                <Text style={styles.price}>${item.produtList.price}</Text>
             </View>
             <View style={styles.buttonWrapper}>
 
                 <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
-                <Text style={styles.itemsCount}>4</Text>
+                <Text style={styles.itemsCount}>1</Text>
                 <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText}>-</Text>
                 </TouchableOpacity>
@@ -40,7 +46,7 @@ const SimpleItemCard = ({ navigation }) => {
     );
 }
 
-export default SimpleItemCard;
+export default CartItemCard;
 
 const styles = StyleSheet.create({
     cardWrapper: {
