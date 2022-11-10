@@ -10,15 +10,21 @@ import { lightColors } from "../theme/colors";
 import { StatusBar } from "expo-status-bar";
 import { supabase } from "../utils/initSupabase";
 import { useSelector, useDispatch } from "react-redux";
-import {setUserId,setUserFirstName,setUserLastName,setUserRole,} from "../redux/actions";
+import {
+  setUserId,
+  setUserFirstName,
+  setUserLastName,
+  setUserRole,
+  setUserEmail,
+  setUserImage,
+} from "../redux/actions";
 import { commonStyles } from "../theme/styles";
-import { Feather } from '@expo/vector-icons'; 
+import { Feather } from "@expo/vector-icons";
 import { removeSessionInfoFromLocal } from "../helpers/common";
 
 const PersonScreen = ({ navigation }) => {
-  
   const { userId, userFirstName } = useSelector((state) => state.userReducer);
-  
+
   const dispatch = useDispatch();
 
   const onLogout = (a) => {
@@ -28,35 +34,53 @@ const PersonScreen = ({ navigation }) => {
       dispatch(setUserFirstName(""));
       dispatch(setUserLastName(""));
       dispatch(setUserRole(""));
+      dispatch(setUserEmail(""));
+      dispatch(setUserImage(""));
       navigation.navigate("Home");
       removeSessionInfoFromLocal();
     };
     const result = logout().catch(console.error);
   };
-  
+
   const onLogin = (a) => {
     navigation.navigate("LoginModal");
   };
 
   const loginButton = () => {
-    return <TouchableOpacity style={styles.button} onPress={onLogin}>
-      <Text style={styles.buttonLabel}>Login</Text>
-    </TouchableOpacity>
-  }
+    return (
+      <TouchableOpacity style={styles.button} onPress={onLogin}>
+        <Text style={styles.buttonLabel}>Login</Text>
+      </TouchableOpacity>
+    );
+  };
 
   const logoutButton = () => {
-    return <TouchableOpacity style={styles.button} onPress={onLogout}>
-      <Text style={styles.buttonLabel}>Logout</Text>
-    </TouchableOpacity>
-  }
+    return (
+      <TouchableOpacity style={styles.button} onPress={onLogout}>
+        <Text style={styles.buttonLabel}>Logout</Text>
+      </TouchableOpacity>
+    );
+  };
 
   const PersonSingleLink = (title, icon, onClick) => {
-    return <TouchableOpacity style={styles.linkWrapper} onPress={onClick}>
-      <Feather name={icon} size={25} style={styles.icon} color={lightColors.dark} />
-      <Text style={{...styles.link, flexGrow: 1}}>{title}</Text>
-      <Feather name="chevron-right" size={20} style={{color: lightColors.grey}} color={lightColors.dark} />
-    </TouchableOpacity>
-  }
+    return (
+      <TouchableOpacity style={styles.linkWrapper} onPress={onClick}>
+        <Feather
+          name={icon}
+          size={25}
+          style={styles.icon}
+          color={lightColors.dark}
+        />
+        <Text style={{ ...styles.link, flexGrow: 1 }}>{title}</Text>
+        <Feather
+          name="chevron-right"
+          size={20}
+          style={{ color: lightColors.grey }}
+          color={lightColors.dark}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -64,9 +88,13 @@ const PersonScreen = ({ navigation }) => {
       <SafeAreaView>
         <Text style={commonStyles.mainHeading}>Hi, {userFirstName}!</Text>
         <View style={styles.buttonWrapper}>
-          {PersonSingleLink("My Profile", "user", () => {})}
+          {PersonSingleLink("My Profile", "user", () =>
+            navigation.navigate("MyProfileModal")
+          )}
           {PersonSingleLink("My Orders", "shopping-bag", () => {})}
-          {PersonSingleLink("Admin Panel", "database", () => navigation.navigate("AdminPanel"))}
+          {PersonSingleLink("Admin Panel", "database", () =>
+            navigation.navigate("AdminPanel")
+          )}
           {PersonSingleLink("Settings", "settings", () => {})}
           {PersonSingleLink("Help", "help-circle", () => {})}
           {PersonSingleLink("About", "info", () => {})}

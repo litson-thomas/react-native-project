@@ -16,7 +16,9 @@ import AdminScreen from "../pages/admin/admin-screen";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/initSupabase";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserFirstName, setUserId, setUserLastName, setUserRole } from "../redux/actions";
+import { setUserEmail, setUserFirstName, setUserId, setUserLastName, setUserRole, setUserImage } from "../redux/actions";
+import MyProfileScreen from "../pages/my-profile-screen";
+import MyFavouritesScreen from "../pages/my-favourites-screen";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -76,6 +78,8 @@ export const AppNavigation = () => {
         dispatch(setUserFirstName(data.first_name));
         dispatch(setUserLastName(data.last_name));
         dispatch(setUserRole(data.role));
+        dispatch(setUserEmail(user?.email));
+        dispatch(setUserImage(data.image));
       }
     }
 
@@ -89,6 +93,8 @@ export const AppNavigation = () => {
       dispatch(setUserFirstName(""));
       dispatch(setUserLastName(""));
       dispatch(setUserRole(""));
+      dispatch(setUserEmail(""));
+      dispatch(setUserImage(""));
     }
 
   }, [user]);
@@ -120,6 +126,12 @@ export const AppNavigation = () => {
               <Stack.Screen
                 name="AdminPanel"
                 component={AdminScreen}
+                listeners={{ focus: () => LightHaptics() }}
+                options={navigationOptions}
+              />
+              <Stack.Screen
+                name="MyProfileModal"
+                component={MyProfileScreen}
                 listeners={{ focus: () => LightHaptics() }}
                 options={navigationOptions}
               />
@@ -163,6 +175,7 @@ function TabNavigator() {
           else if (route.name === "Search") iconName = "search";
           else if (route.name === "Person") iconName = "user";
           else if (route.name === "Cart") iconName = "shopping-cart";
+          else if (route.name === "Favourite") iconName = "heart";
           return <Feather name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: lightColors.primary,
@@ -182,6 +195,11 @@ function TabNavigator() {
       <Tab.Screen
         name="Cart"
         component={CartScreen}
+        options={navigationOptions}
+      />
+      <Tab.Screen
+        name="Favourite"
+        component={MyFavouritesScreen}
         options={navigationOptions}
       />
       <Tab.Screen

@@ -16,6 +16,8 @@ import CategoryList from "../components/search/category-list";
 import SearchHint from "../components/search/search-hint";
 import SearchButtons from "../components/search/search-buttons";
 import ProductCard from "../components/search/product-card";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserFavourites } from "../redux/actions";
 
 const SearchScreen = ({ navigation, route }) => {
   const [searchString, setSearchString] = useState("");
@@ -27,9 +29,11 @@ const SearchScreen = ({ navigation, route }) => {
   const initialCategory = 0;
   const initialPrice = 0;
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const [price, setPrice] = useState(initialPrice);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const { userId, userFavourites } = useSelector((state) => state.userReducer);
 
   const SIZES = [
     { name: "XS", isChecked: false },
@@ -40,8 +44,9 @@ const SearchScreen = ({ navigation, route }) => {
   ];
   const [productSizes, setProductSizes] = useState(SIZES);
 
-  // ! Replace Customer Id with user id
-  const userId = "d23cba09-99d5-479c-a09c-5bc58c7da06d";
+  useEffect(() => {
+    fetchFavourites();
+  }, [userFavourites]);
 
   const onSearch = (item) => {
     setSearchString(item);
@@ -63,9 +68,14 @@ const SearchScreen = ({ navigation, route }) => {
           product: data.id,
           user: userId,
         });
+        if (error) {
+          console.log(error);
+        } else {
+          setFavouriteProducts([...favouriteProducts, data.id]);
+          dispatch(setUserFavourites([...favouriteProducts, data.id]));
+        }
       };
-      const result = insertFavourite().catch(console.error);
-      setFavouriteProducts([...favouriteProducts, data.id]);
+      insertFavourite();
     } else {
       const deleteFavourite = async () => {
         const { error } = await supabase
@@ -73,9 +83,20 @@ const SearchScreen = ({ navigation, route }) => {
           .delete()
           .eq("product", data.id)
           .eq("user", userId);
+        if (error) {
+          console.log(error);
+        } else {
+          setFavouriteProducts(
+            ...[favouriteProducts.filter((a) => a !== data.id)]
+          );
+          dispatch(
+            setUserFavourites([
+              ...favouriteProducts.filter((a) => a !== data.id),
+            ])
+          );
+        }
       };
-      const result = deleteFavourite().catch(console.error);
-      setFavouriteProducts(favouriteProducts.filter((a) => a !== data.id));
+      deleteFavourite();
     }
   };
   const onFilter = () => {
@@ -107,6 +128,17 @@ const SearchScreen = ({ navigation, route }) => {
     route.params?.productSizes,
   ]);
 
+  const fetchFavourites = async () => {
+    console.log("fetchFavourites in search-screen");
+    const { data, error } = await supabase
+      .from("favourite")
+      .select(`product`)
+      .eq("user", userId);
+    setFavouriteProducts([...data.map((a) => a.product)]);
+    console.log(`fetchFavourites ${[...data.map((a) => a.product)]}`);
+    //console.log(data.map((a) => a.product));
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase
@@ -117,13 +149,7 @@ const SearchScreen = ({ navigation, route }) => {
       setSelectedCategoryId(initialCategory);
     };
     const result = fetchCategories().catch(console.error);
-    const fetchFavourites = async () => {
-      const { data, error } = await supabase
-        .from("favourite")
-        .select(`product`)
-        .eq("user", userId);
-      setFavouriteProducts(data.map((a) => a.product));
-    };
+
     const resultsFavourties = fetchFavourites().catch(console.error);
     // const {data, error} = ApiRequest.fetchFavourites();
     // setFavouriteProducts(data.map((a) => a.product));
@@ -184,7 +210,6 @@ const SearchScreen = ({ navigation, route }) => {
               productSizes.filter((a) => a.isChecked).map((a) => a.name)
             )
         );
-        
       }
       const { data, error } = await query;
       //console.log(data);
@@ -259,7 +284,7 @@ const SearchScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ flex: 11, marginHorizontal: 20, }}>
+        <View style={{ flex: 11, marginHorizontal: 20 }}>
           {loading ? (
             <ActivityIndicator
               style={styles.loader}

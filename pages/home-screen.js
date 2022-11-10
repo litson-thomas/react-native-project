@@ -11,13 +11,13 @@ import Featured from '../components/home/featured';
 import { useSelector } from 'react-redux';
 
 const HomeScreen = ({ navigation }) => {
-    const { userFirstName } = useSelector((state) => state.userReducer);
+    const { userFirstName , userImage} = useSelector((state) => state.userReducer);
     return (
         <View style={styles.container}>
             <SafeAreaView>
                 <StatusBar style="auto" />
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {userFirstName && <Header user={userFirstName}></Header>}
+                    {userFirstName && <Header userFirstName={userFirstName} userImage={userImage}></Header>}
                     <Featured navigation={navigation}></Featured>
                     <ScrollView horizontal={true} style={styles.itemList} showsHorizontalScrollIndicator={false}>
                         <View style={{ marginLeft: 20 }}><ItemCard navigation={navigation}></ItemCard></View>
