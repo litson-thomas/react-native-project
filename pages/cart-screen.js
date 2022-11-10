@@ -3,20 +3,24 @@ import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { lightColors } from '../theme/colors';
 import { StatusBar } from 'expo-status-bar';
 import BackButton from '../components/common/back-button';
-import FavItemCard from '../components/home/cart-item-card';
 import CartDetails from '../components/home/cart-details';
+import CartItemCard from '../components/home/cart-item-card';
 
-const CartScreen = ({ navigation }) => {
+const CartScreen = ({ navigation, route }) => {
+    const products = route.params;
+    //console.log(products);
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
             <SafeAreaView>
                 <Text style={styles.title}>Cart</Text>
                 {
-                    [1, 2].map((item, index) => {
+                    [products].map((item, index) => {
                         return (
+
                             <><View key={index} style={{ marginBottom: 20 }}>
-                                <FavItemCard navigation={navigation}></FavItemCard>
+                                <CartItemCard navigation={navigation} item={item} />
+
                             </View></>
 
 
