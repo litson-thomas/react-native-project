@@ -24,7 +24,7 @@ const DetailScreen = ({ navigation, route }) => {
     useEffect(() => {
 
         fetchProduct(route.params?.id);
-        console.log(route.params?.id);
+   
         
     }, [route.params?.id]);
 
@@ -59,8 +59,7 @@ const DetailScreen = ({ navigation, route }) => {
     
   };
     const renderProductSizes = (data) => {
-         console.log("data")
-         console.log(data)
+        
        
         return (
             <FlatList
@@ -97,14 +96,13 @@ const DetailScreen = ({ navigation, route }) => {
     const fetchProduct = async (id) => {
         const { data, error } = await supabase
             .from("product")
-            .select(`*`)
+            .select(`*,type(name)`)
             .eq("id", id);
         setProduct(data[0]);
-        //setProductSizes(data[0].sizes);
+        console.log(data[0]);
         setProductSizes(data[0].sizes.map((a) => ({ name:a, isChecked: false })));
        
-        console.log("fetch") 
-     console.log(data[0].sizes.map((a) => ({ name:a, isChecked: false })));
+        console.log("fetch");
 
     };
 
@@ -129,7 +127,7 @@ const DetailScreen = ({ navigation, route }) => {
                                 <Text style={styles.title}>{product.name}</Text>
 
 
-                                <Text style={styles.subTitle}>Regular Shoes</Text>
+                                <Text style={styles.subTitle}>{product.type?.name}</Text>
                             </View>
                             <Text style={styles.price}>${product.price}</Text>
                         </View>
