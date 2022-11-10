@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, FlatList, TouchableOpacity, ScrollView, } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image, FlatList, TouchableOpacity, } from 'react-native';
 import { lightColors } from '../theme/colors';
 import { StatusBar } from 'expo-status-bar';
 import BackButton from '../components/common/back-button';
@@ -59,8 +59,7 @@ const DetailScreen = ({ navigation, route }) => {
     
   };
     const renderProductSizes = (data) => {
-         console.log("data")
-         console.log(data)
+        
        
         return (
             <FlatList
@@ -97,36 +96,16 @@ const DetailScreen = ({ navigation, route }) => {
     const fetchProduct = async (id) => {
         const { data, error } = await supabase
             .from("product")
-            .select(`*`)
+            .select(`*,type{name}`)
             .eq("id", id);
         setProduct(data[0]);
-        //setProductSizes(data[0].sizes);
+        console.log(data[0]);
         setProductSizes(data[0].sizes.map((a) => ({ name:a, isChecked: false })));
        
-        console.log("fetch") 
-     console.log(data[0].sizes.map((a) => ({ name:a, isChecked: false })));
+        console.log("fetch");
 
     };
 
-    const saveToCart = async () => {
-        const { error } = await supabase
-            .from("shopping_cart")
-            .insert([
-                {
-                    product: product.id,
-                    customer: product.user_id,
-                    quantity: 1,
-                    price: product.price,
-                },
-            ]);
-        if (error) {
-            console.log("error 123", error);
-        } else {
-            navigation.navigate('Cart', { produtList: product })
-            console.log("Succesfully added to cart");
-        }
-
-    };
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -137,62 +116,26 @@ const DetailScreen = ({ navigation, route }) => {
                     uri: `${Constants.expoConfig.extra.productUrl}/${product.images}`,
                 }} />
 
-                <ScrollView>
-                    <View style={styles.detailsBox}>
-                        <View style={styles.detailWrapper}>
-                            <View style={styles.nameprice}>
-
-                                <View style={styles.detailsWrapper}>
-                                    <Text style={styles.title}>{product.name}</Text>
 
 
-                                    <Text style={styles.subTitle}>Regular Shoes</Text>
-                                </View>
-                                <Text style={styles.price}>${product.price}</Text>
+
+                <View style={styles.detailsBox}>
+                    <View style={styles.detailWrapper}>
+                        <View style={styles.nameprice}>
+
+                            <View style={styles.detailsWrapper}>
+                                <Text style={styles.title}>{product.name}</Text>
+
+
+                                <Text style={styles.subTitle}>Regular Shoes</Text>
                             </View>
-
-                            <View style={styles.cardWrapper}>
-                                <View style={styles.header}>
-                                    <Text style={styles.smalltitle}> Select Sizes</Text>
-
-                                </View>
-                                <View style={styles.sizesWrapper}>
-                                    {renderProductSizes(product.sizes)}
-                                </View>
-                                <View>
-                                    <Text style={styles.smalltitle}>Description</Text>
-                                </View>
-                                <View>
-                                    <Text style={styles.desc}>{product.description}</Text>
-                                </View>
-                                <View style={styles.btncontainer}>
-
-                                    <TouchableOpacity
-                                        //onPress={onApply}
-                                        style={[styles.button, { backgroundColor: lightColors.dark }]}
-                                        onPress={
-                                            () => saveToCart()} >
-
-                                        <Text style={{
-                                            color: lightColors.light,
-                                        }}>Add to Cart</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        //onPress={onClearAll} 
-                                        style={[styles.button, { width: "30%" }]} >
-
-                                        <FontAwesome name="heart-o" size={30} color={lightColors.primary} />
-                                    </TouchableOpacity>
-
-                                </View>
-                            </View>
-
-
+                            <Text style={styles.price}>${product.price}</Text>
                         </View>
-                    </View>
-                </ScrollView>
 
 
+                        <View style={styles.cardWrapper}>
+                            <View style={styles.header}>
+                                <Text style={styles.smalltitle}> Select Sizes</Text>
 
                             </View>
                             <View style={styles.sizesWrapper}>
@@ -219,7 +162,10 @@ const DetailScreen = ({ navigation, route }) => {
                                 <FontAwesome name={isFavourite} size={40} color={lightColors.primary} />
                             </TouchableOpacity>
 
+                        </View>
 
+                    </View>
+                </View>
 
             </SafeAreaView>
         </View>
@@ -278,6 +224,7 @@ const styles = StyleSheet.create({
     },
     sizesWrapper: {
         display: "flex",
+
         marginBottom: 10,
     },
     size: {
