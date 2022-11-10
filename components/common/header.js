@@ -2,20 +2,24 @@ import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { lightColors } from "../../theme/colors";
 import { commonStyles } from "../../theme/styles";
+import Constants from "expo-constants";
 
-const Header = ({ user }) => {
+const Header = ({ userFirstName , userImage}) => {
   
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.subTitle}>Welcome</Text>
-        <Text style={styles.title}>Hi, {user}</Text>
+        <Text style={styles.title}>Hi, {userFirstName}</Text>
       </View>
       <View>
         <TouchableOpacity>
           <Image
             style={styles.avatar}
-            source={{ uri: "https://i.pravatar.cc/50?img=2" }}
+            // source={{ uri: "https://i.pravatar.cc/50?img=2" }}
+            source={{
+              uri: `${Constants.expoConfig.extra.userUrl}/${userImage}`,
+            }}
           />
         </TouchableOpacity>
       </View>

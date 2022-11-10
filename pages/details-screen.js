@@ -7,32 +7,83 @@ import { supabase } from "../utils/initSupabase";
 import { commonStyles } from '../theme/styles';
 import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
+import { useSelector } from 'react-redux';
+
 
 
 const DetailScreen = ({ navigation, route }) => {
-    const id = 7;
+
+
+    const { userId } = useSelector((state) => state.userReducer);
     const [productSizes, setProductSizes] = useState([]);
     const [product, setProduct] = useState([]);
+    const [check, setCheck] = useState("");
+    const [favouriteProducts, setFavouriteProducts] = useState([]);
+    var isFavourite = favouriteProducts.includes(product.id) ? 'heart' : 'heart-o';
 
     useEffect(() => {
-        fetchProduct();
-    }, []);
 
+        fetchProduct(route.params?.id);
+        console.log(route.params?.id);
+        
+    }, [route.params?.id]);
+
+ 
+
+
+    const onFavourite = (data, isFavourite) => {
+        if (isFavourite === "heart-o") {
+            const insertFavourite = async () => {
+                const { error } = await supabase.from("favourite").insert({
+                    product: product.id,
+                    user: userId,
+                });
+            };
+            const result = insertFavourite().catch(console.error);
+            setFavouriteProducts([...favouriteProducts, data.id]);
+        } else {
+            const deleteFavourite = async () => {
+                const { error } = await supabase
+                    .from("favourite")
+                    .delete()
+                    .eq("product", data.id)
+                    .eq("user", userId);
+            };
+            const result = deleteFavourite().catch(console.error);
+            setFavouriteProducts(favouriteProducts.filter((a) => a !== data.id));
+        }
+    };
+  const handleChangeProductSize = (id) => {
+ setCheck(id);
+      
+    
+  };
     const renderProductSizes = (data) => {
+         console.log("data")
+         console.log(data)
+       
         return (
             <FlatList
-                horizontal={true}
-                data={data}
-
+            horizontal={true}
+            data={data}
+        
                 renderItem={({ item }) => (
+                    
                     <TouchableOpacity
                         style={[
-                            styles.size, {
-                                backgroundColor: lightColors.background,
-                                borderColor: lightColors.background,
-                            }
+                            styles.size,
+                            check===item
+                                ? {
+                                    backgroundColor: lightColors.light,
+                                    borderColor: lightColors.dark,
+                                    
+                                }
+                                : {
+                                    backgroundColor: lightColors.background,
+                                    borderColor: lightColors.background,
+                                },
                         ]}
-                    // onPress={handleChangeProductSize.bind(this, item.name)}
+                    onPress={handleChangeProductSize.bind(this, item)}
                     >
                         <Text style={styles.text}>{item}</Text>
                     </TouchableOpacity>
@@ -43,12 +94,18 @@ const DetailScreen = ({ navigation, route }) => {
 
 
 
-    const fetchProduct = async () => {
+    const fetchProduct = async (id) => {
         const { data, error } = await supabase
             .from("product")
             .select(`*`)
             .eq("id", id);
         setProduct(data[0]);
+        //setProductSizes(data[0].sizes);
+        setProductSizes(data[0].sizes.map((a) => ({ name:a, isChecked: false })));
+       
+        console.log("fetch") 
+     console.log(data[0].sizes.map((a) => ({ name:a, isChecked: false })));
+
     };
 
     const saveToCart = async () => {
@@ -136,6 +193,31 @@ const DetailScreen = ({ navigation, route }) => {
                 </ScrollView>
 
 
+
+                            </View>
+                            <View style={styles.sizesWrapper}>
+                                {renderProductSizes(product.sizes)}
+                            </View>
+                        </View>
+                        <View>
+                            <Text style={styles.smalltitle}>Description</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.desc}>{product.description}</Text>
+                        </View>
+                        <View style={styles.btncontainer}>
+                            <TouchableOpacity
+                                //onPress={onApply}
+                                style={[styles.button, { backgroundColor: lightColors.dark }]}
+                            >
+                                <Text style={{
+                                    color: lightColors.light,
+                                }}>Add to Cart</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={onFavourite.bind(this, product, isFavourite)}>
+                                <FontAwesome name={isFavourite} size={40} color={lightColors.primary} />
+                            </TouchableOpacity>
 
 
 
@@ -271,7 +353,7 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        width: "70%",
+        width: "80%",
         alignContent: "center",
         alignItems: "center",
         marginTop: 10,
