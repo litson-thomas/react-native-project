@@ -22,7 +22,7 @@ const ProductCard = ({ data, favouriteProducts,  onFavourite, navigation }) => {
       onPressIn={onCardClick}
       onPressOut={onCardPressOut}
       onPress={() => {
-        navigation.navigate("DetailModal");
+        navigation.navigate('DetailModal', { id: data.id});
       }}
     >
       <View
