@@ -7,12 +7,17 @@ import Constants from "expo-constants";
 import { useEffect } from 'react';
 import { supabase } from '../../utils/initSupabase';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+    setItemQty
+} from "../../redux/actions";
 
+import { useDispatch } from "react-redux";
 
 const CartItemCard = ({ navigation, route, item }) => {
     const [cartProducts, setCartProducts] = useState([]);
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
     const [borderColor, setBorderColor] = useState(lightColors.light);
+    const dispatch = useDispatch();
 
     const onCardClick = () => {
         setBorderColor(lightColors.primary);
@@ -26,6 +31,10 @@ const CartItemCard = ({ navigation, route, item }) => {
 
     }, []);
 
+    useEffect(() => {
+        dispatch(setItemQty(quantity));
+        console.log("quantity", quantity);
+    }, [quantity]);
 
     const getProductItems = async () => {
         //get product items
@@ -40,6 +49,7 @@ const CartItemCard = ({ navigation, route, item }) => {
             setCartProducts([...data]);
         }
     };
+
     return (
 
 

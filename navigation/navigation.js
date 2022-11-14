@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUserEmail, setUserFirstName, setUserId, setUserLastName, setUserRole, setUserImage } from "../redux/actions";
 import MyProfileScreen from "../pages/my-profile-screen";
 import MyFavouritesScreen from "../pages/my-favourites-screen";
+import CheckOutScreen from "../pages/check-out-screen";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -137,6 +138,12 @@ export const AppNavigation = () => {
                 options={navigationOptions}
               />
 
+              <Stack.Screen
+                name="CheckOut"
+                component={CheckOutScreen}
+                listeners={{ focus: () => LightHaptics() }}
+                options={navigationOptions}
+              />
             </>
           )
         }
