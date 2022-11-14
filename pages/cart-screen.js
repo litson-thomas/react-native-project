@@ -21,9 +21,9 @@ const CartScreen = ({ navigation, route }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (userCart.length > 0) {
+      //  if (userCart.length > 0) {
             fetchCartItems();
-        }
+       // }
 
     }, []);
 
@@ -116,6 +116,12 @@ const CartScreen = ({ navigation, route }) => {
             </View>
         );
     };
+
+    const onQuantityUpdate = (data) => {
+        // console.log('updated', data);
+        fetchCartItems();
+    }
+   
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -125,14 +131,16 @@ const CartScreen = ({ navigation, route }) => {
 
                 <FlatList
                     data={userCart}
-                    renderItem={({ item }) => (
-                        <CartItemCard
+                    renderItem={({ item, index }) => (
+                        <CartItemCard 
+                            index={index}
                             item={item}
                             navigation={navigation}
                             route={route}
+                            onQuantityUpdate={onQuantityUpdate}
                         />
                     )}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id.toString()}
                     ListEmptyComponent={emptyList}
                     showsVerticalScrollIndicator={true}
                     ListFooterComponent={details} />

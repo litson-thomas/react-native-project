@@ -8,16 +8,16 @@ import { useEffect } from 'react';
 import { supabase } from '../../utils/initSupabase';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-    setItemQty
+    setItemQty, setUserCart
 } from "../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useDispatch } from "react-redux";
-
-const CartItemCard = ({ navigation, route, item }) => {
+const CartItemCard = ({ navigation, route, item,index, onQuantityUpdate }) => {
     const [cartProducts, setCartProducts] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [borderColor, setBorderColor] = useState(lightColors.light);
     const dispatch = useDispatch();
+    const { userCart } = useSelector((state) => state.userReducer);
 
     const onCardClick = () => {
         setBorderColor(lightColors.primary);
@@ -27,14 +27,31 @@ const CartItemCard = ({ navigation, route, item }) => {
         setBorderColor(lightColors.light);
     }
     useEffect(() => {
+        // console.log(quantity, item)
         getProductItems();
-
     }, []);
 
     useEffect(() => {
-        dispatch(setItemQty(quantity));
-        console.log("quantity", quantity);
+        // dispatch(setItemQty(quantity));
+        // console.log("quantity", quantity);
+        updateQuantityInDb(quantity)
     }, [quantity]);
+
+    const updateQuantityInDb = async (quantity) => {
+        const { data, error } = await supabase
+            .from("shopping_cart")
+            .update({
+                ...item,
+                quantity: quantity
+            })
+            .eq("id", item.id);
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(quantity)
+            onQuantityUpdate(`${9}`)
+        }
+    }
 
     const getProductItems = async () => {
         //get product items
@@ -45,19 +62,28 @@ const CartItemCard = ({ navigation, route, item }) => {
         if (error) {
             console.log(error);
         } else {
-            console.log("product items", data);
+            // console.log("product items", data);
             setCartProducts([...data]);
         }
     };
 
+    const onPlus = (quantity) => {
+        onQuantityUpdate('data.userCart')
+    }
+    const onMinus = () => {
+        setQuantity(quantity-1);
+
+        console.log("onMinus " + item + " " + index);
+    }
+
     return (
 
 
-        <View style={{ ...styles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
+        <View  style={{ ...styles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
             <SafeAreaView>
                 {
                     cartProducts && cartProducts.length > 0 && cartProducts.map((item, index) => {
-                        return <View>
+                        return <View key={item.id}>
 
                             <View style={styles.detailsWrapper}>
                                 <Image style={styles.image} source={{
@@ -70,11 +96,15 @@ const CartItemCard = ({ navigation, route, item }) => {
                             </View>
                             <View style={styles.buttonWrapper}>
 
-                                <TouchableOpacity style={styles.button} onPress={() => setQuantity(quantity + 1)}>
+                                <TouchableOpacity style={styles.button} onPress={() => {
+                                    setQuantity(quantity + 1)
+                                }}>
                                     <Text style={styles.buttonText}>+</Text>
                                 </TouchableOpacity >
                                 <Text style={styles.itemsCount}>{quantity}</Text>
-                                <TouchableOpacity style={styles.button} onPress={() => setQuantity(quantity - 1)}>
+                                <TouchableOpacity style={styles.button} onPress={() => {
+                                    setQuantity(quantity - 1)
+                                }}>
                                     <Text style={styles.buttonText}>-</Text>
                                 </TouchableOpacity>
                             </View>
