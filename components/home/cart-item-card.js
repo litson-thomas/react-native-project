@@ -4,10 +4,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
 import Constants from "expo-constants";
+import { useEffect } from 'react';
+import { supabase } from '../../utils/initSupabase';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const CartItemCard = ({ navigation, route, item }) => {
-    console.log(item);
-
+    const [cartProducts, setCartProducts] = useState([]);
+    const [quantity, setQuantity] = useState(0);
     const [borderColor, setBorderColor] = useState(lightColors.light);
 
     const onCardClick = () => {
@@ -17,33 +21,65 @@ const CartItemCard = ({ navigation, route, item }) => {
     const onCardPressOut = () => {
         setBorderColor(lightColors.light);
     }
+    useEffect(() => {
+        getProductItems();
 
+    }, []);
+
+
+    const getProductItems = async () => {
+        //get product items
+        const { data, error } = await supabase
+            .from("product")
+            .select(`*`)
+            .eq("id", item.product);
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("product items", data);
+            setCartProducts([...data]);
+        }
+    };
     return (
+
+
         <View style={{ ...styles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
+            <SafeAreaView>
+                {
+                    cartProducts && cartProducts.length > 0 && cartProducts.map((item, index) => {
+                        return <View>
+
+                            <View style={styles.detailsWrapper}>
+                                <Image style={styles.image} source={{
+                                    uri: `${Constants.expoConfig.extra.productUrl}/${item.images}`,
+                                }} />
+                                <Text style={styles.title}>{item.name}</Text>
+
+                                <Text style={styles.price}>${item.price}</Text>
+
+                            </View>
+                            <View style={styles.buttonWrapper}>
+
+                                <TouchableOpacity style={styles.button} onPress={() => setQuantity(quantity + 1)}>
+                                    <Text style={styles.buttonText}>+</Text>
+                                </TouchableOpacity >
+                                <Text style={styles.itemsCount}>{quantity}</Text>
+                                <TouchableOpacity style={styles.button} onPress={() => setQuantity(quantity - 1)}>
+                                    <Text style={styles.buttonText}>-</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    })
+                }
 
 
-            <Image style={styles.image} source={{
-                uri: `${Constants.expoConfig.extra.productUrl}/${item.produtList.images}`,
-            }} />
-            <View style={styles.detailsWrapper}>
-                <Text style={styles.title}>{item.produtList.name}</Text>
-                <Text style={styles.price}>${item.produtList.price}</Text>
-            </View>
-            <View style={styles.buttonWrapper}>
+            </SafeAreaView>
 
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>+</Text>
-                </TouchableOpacity>
-                <Text style={styles.itemsCount}>1</Text>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>-</Text>
-                </TouchableOpacity>
-            </View>
         </View>
 
 
-
     );
+
 }
 
 export default CartItemCard;
@@ -58,6 +94,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 5,
         marginRight: 5,
+        marginBottom: 10,
     },
     image: {
         width: 80,

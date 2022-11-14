@@ -129,6 +129,7 @@ export const AppNavigation = () => {
                 listeners={{ focus: () => LightHaptics() }}
                 options={navigationOptions}
               />
+
               <Stack.Screen
                 name="MyProfileModal"
                 component={MyProfileScreen}
