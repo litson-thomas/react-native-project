@@ -59,7 +59,7 @@ export const setUserFavourites = userFavourites => dispatch => {
 };
 
 export const setUserCart = userCart => dispatch => {
-    console.log('userCart', userCart);
+    //console.log('userCart', userCart);
     dispatch({
         type: SET_USER_CART,
         payload: userCart,
