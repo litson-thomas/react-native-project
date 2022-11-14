@@ -7,32 +7,106 @@ import { supabase } from "../utils/initSupabase";
 import { commonStyles } from '../theme/styles';
 import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
+import { useDispatch, useSelector } from 'react-redux';
+import { pushToUserCart } from "../redux/actions";
+
 
 
 const DetailScreen = ({ navigation, route }) => {
-    const id = 7;
+
+
+    const { userId } = useSelector((state) => state.userReducer);
     const [productSizes, setProductSizes] = useState([]);
     const [product, setProduct] = useState([]);
+    const [check, setCheck] = useState("");
+    const [favouriteProducts, setFavouriteProducts] = useState([]);
+    var isFavourite = favouriteProducts.includes(product.id) ? 'heart' : 'heart-o';
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchProduct();
-    }, []);
 
+        fetchProduct(route.params?.id);
+        console.log(route.params?.id);
+    }, [route.params?.id]);
+
+
+    const saveToCart = async () => {
+        const { error } = await supabase
+            .from("shopping_cart")
+            .insert([
+                {
+                    product: product.id,
+                    customer: userId,
+                    quantity: 1,
+                    price: product.price,
+                },
+            ]);
+        if (error) {
+            console.log("error DetailsCartAdd", error);
+        } else {
+            dispatch(pushToUserCart({
+                product: product.id,
+                customer: userId,
+                quantity: 1,
+                price: product.price,
+            }));
+            navigation.navigate('Cart', { userId: userId })
+        }
+    };
+
+    const onFavourite = (data, isFavourite) => {
+        if (isFavourite === "heart-o") {
+            const insertFavourite = async () => {
+                const { error } = await supabase.from("favourite").insert({
+                    product: product.id,
+                    user: userId,
+                });
+            };
+            const result = insertFavourite().catch(console.error);
+            setFavouriteProducts([...favouriteProducts, data.id]);
+        } else {
+            const deleteFavourite = async () => {
+                const { error } = await supabase
+                    .from("favourite")
+                    .delete()
+                    .eq("product", data.id)
+                    .eq("user", userId);
+            };
+            const result = deleteFavourite().catch(console.error);
+            setFavouriteProducts(favouriteProducts.filter((a) => a !== data.id));
+        }
+    };
+    const handleChangeProductSize = (id) => {
+        setCheck(id);
+
+
+    };
     const renderProductSizes = (data) => {
+
+
         return (
             <FlatList
                 horizontal={true}
                 data={data}
 
                 renderItem={({ item }) => (
+
                     <TouchableOpacity
                         style={[
-                            styles.size, {
-                                backgroundColor: lightColors.background,
-                                borderColor: lightColors.background,
-                            }
+                            styles.size,
+                            check === item
+                                ? {
+                                    backgroundColor: lightColors.light,
+                                    borderColor: lightColors.dark,
+
+                                }
+                                : {
+                                    backgroundColor: lightColors.background,
+                                    borderColor: lightColors.background,
+                                },
                         ]}
-                    // onPress={handleChangeProductSize.bind(this, item.name)}
+                        onPress={handleChangeProductSize.bind(this, item)}
                     >
                         <Text style={styles.text}>{item}</Text>
                     </TouchableOpacity>
@@ -43,12 +117,17 @@ const DetailScreen = ({ navigation, route }) => {
 
 
 
-    const fetchProduct = async () => {
+    const fetchProduct = async (id) => {
         const { data, error } = await supabase
             .from("product")
-            .select(`*`)
+            .select(`*,type(name)`)
             .eq("id", id);
         setProduct(data[0]);
+        console.log(data[0]);
+        setProductSizes(data[0].sizes.map((a) => ({ name: a, isChecked: false })));
+
+        console.log("fetch");
+
     };
 
     return (
@@ -72,7 +151,7 @@ const DetailScreen = ({ navigation, route }) => {
                                 <Text style={styles.title}>{product.name}</Text>
 
 
-                                <Text style={styles.subTitle}>Regular Shoes</Text>
+                                <Text style={styles.subTitle}>{product.type?.name}</Text>
                             </View>
                             <Text style={styles.price}>${product.price}</Text>
                         </View>
@@ -94,18 +173,17 @@ const DetailScreen = ({ navigation, route }) => {
                             <Text style={styles.desc}>{product.description}</Text>
                         </View>
                         <View style={styles.btncontainer}>
-                            <TouchableOpacity
-                                //onPress={onApply}
-                                style={[styles.button, { backgroundColor: lightColors.dark }]}
-                            >
+                            <TouchableOpacity onPress={saveToCart}
+
+                                style={[styles.button, { backgroundColor: lightColors.dark }]}>
+
                                 <Text style={{
                                     color: lightColors.light,
                                 }}>Add to Cart</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                //onPress={onClearAll} 
-                                style={[styles.button,{width:"30%"}]}>
-                               <FontAwesome name="heart-o" size={30} color={lightColors.primary} />
+
+                            <TouchableOpacity onPress={onFavourite.bind(this, product, isFavourite)}>
+                                <FontAwesome name={isFavourite} size={40} color={lightColors.primary} />
                             </TouchableOpacity>
 
                         </View>
@@ -170,8 +248,6 @@ const styles = StyleSheet.create({
     },
     sizesWrapper: {
         display: "flex",
-        justifyContent: "left",
-        alignItems: "left",
 
         marginBottom: 10,
     },
@@ -248,7 +324,7 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        width: "70%",
+        width: "80%",
         alignContent: "center",
         alignItems: "center",
         marginTop: 10,

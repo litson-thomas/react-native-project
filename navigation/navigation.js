@@ -15,8 +15,6 @@ import { Feather } from "@expo/vector-icons";
 import AdminScreen from "../pages/admin/admin-screen";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/initSupabase";
-import { useDispatch } from "react-redux";
-import { setUserFirstName, setUserId, setUserLastName, setUserRole } from "../redux/actions";
 import Categories from "../pages/admin/category/categories";
 import AddCategory from "../pages/admin/category/add-categories";
 import AddProduct from "../pages/admin/products/add-product";
@@ -26,6 +24,11 @@ import ViewUser from "../pages/admin/users/viewUser";
 import Orders from "../pages/admin/orders/orders";
 import AddOrder from "../pages/admin/orders/add-order";
 import Sales from "../pages/admin/sales";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserEmail, setUserFirstName, setUserId, setUserLastName, setUserRole, setUserImage } from "../redux/actions";
+import MyProfileScreen from "../pages/my-profile-screen";
+import MyFavouritesScreen from "../pages/my-favourites-screen";
+import CheckOutScreen from "../pages/check-out-screen";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -41,7 +44,7 @@ export const AppNavigation = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
+
     // check if user is logged in
     // from the local storage
     const checkSession = async () => {
@@ -57,12 +60,12 @@ export const AppNavigation = () => {
     // listen for auth changes
     supabase.auth.onAuthStateChange(async (event, session) => {
       // if user is logged in
-      if(session && session.user) {
+      if (session && session.user) {
         setUser(session.user)
         setSessionInfoInLocal(session);
       }
       // if user is not logged in
-      else{
+      else {
         setUser(null)
         removeSessionInfoFromLocal();
       }
@@ -80,25 +83,29 @@ export const AppNavigation = () => {
         .select(`*`)
         .eq("id", user?.id)
         .single();
-      if (error) console.log(error); 
+      if (error) console.log(error);
       else {
         dispatch(setUserId(data.id));
         dispatch(setUserFirstName(data.first_name));
         dispatch(setUserLastName(data.last_name));
         dispatch(setUserRole(data.role));
+        dispatch(setUserEmail(user?.email));
+        dispatch(setUserImage(data.image));
       }
     }
 
     // if user is logged in
-    if(user){
+    if (user) {
       setUserState(user.user);
     }
     // if user is not logged in
-    else{
+    else {
       dispatch(setUserId(""));
       dispatch(setUserFirstName(""));
       dispatch(setUserLastName(""));
       dispatch(setUserRole(""));
+      dispatch(setUserEmail(""));
+      dispatch(setUserImage(""));
     }
 
   }, [user]);
@@ -124,6 +131,26 @@ export const AppNavigation = () => {
               <Stack.Screen
                 name="FilterModal"
                 component={FilterScreen}
+                listeners={{ focus: () => LightHaptics() }}
+                options={navigationOptions}
+              />
+              {/* <Stack.Screen
+                name="AdminPanel"
+                component={AdminScreen}
+                listeners={{ focus: () => LightHaptics() }}
+                options={navigationOptions}
+              /> */}
+
+              <Stack.Screen
+                name="MyProfileModal"
+                component={MyProfileScreen}
+                listeners={{ focus: () => LightHaptics() }}
+                options={navigationOptions}
+              />
+
+              <Stack.Screen
+                name="CheckOut"
+                component={CheckOutScreen}
                 listeners={{ focus: () => LightHaptics() }}
                 options={navigationOptions}
               />
@@ -166,7 +193,7 @@ export const AppNavigation = () => {
 
 // Tabs navigator component
 function TabNavigator() {
-  
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -176,6 +203,7 @@ function TabNavigator() {
           else if (route.name === "Search") iconName = "search";
           else if (route.name === "Person") iconName = "user";
           else if (route.name === "Cart") iconName = "shopping-cart";
+          else if (route.name === "Favourite") iconName = "heart";
           return <Feather name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: lightColors.primary,
@@ -195,6 +223,11 @@ function TabNavigator() {
       <Tab.Screen
         name="Cart"
         component={CartScreen}
+        options={navigationOptions}
+      />
+      <Tab.Screen
+        name="Favourite"
+        component={MyFavouritesScreen}
         options={navigationOptions}
       />
       <Tab.Screen

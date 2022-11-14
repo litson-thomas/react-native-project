@@ -23,10 +23,10 @@ import BackButton from '../components/common/back-button';
 const SignUpScreen = ({ navigation }) => {
   //const [authUser, setAuthUser] = useState();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("vergel.delacruz@jll.com");
-  const [password, setPassword] = useState("password");
-  const [firstName, setFirstName] = useState("Elon");
-  const [lastName, setLastName] = useState("Musk");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   //const [auth, setAuth] = useState(true);
   const onSignUp = async () => {
