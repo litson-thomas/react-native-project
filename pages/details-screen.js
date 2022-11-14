@@ -28,7 +28,6 @@ const DetailScreen = ({ navigation, route }) => {
 
         fetchProduct(route.params?.id);
         console.log(route.params?.id);
-
     }, [route.params?.id]);
 
 
@@ -121,7 +120,7 @@ const DetailScreen = ({ navigation, route }) => {
     const fetchProduct = async (id) => {
         const { data, error } = await supabase
             .from("product")
-            .select(`*,type{name}`)
+            .select(`*,type(name)`)
             .eq("id", id);
         setProduct(data[0]);
         console.log(data[0]);
@@ -152,7 +151,7 @@ const DetailScreen = ({ navigation, route }) => {
                                 <Text style={styles.title}>{product.name}</Text>
 
 
-                                <Text style={styles.subTitle}>Regular Shoes</Text>
+                                <Text style={styles.subTitle}>{product.type?.name}</Text>
                             </View>
                             <Text style={styles.price}>${product.price}</Text>
                         </View>
