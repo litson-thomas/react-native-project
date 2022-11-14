@@ -129,13 +129,13 @@ const SearchScreen = ({ navigation, route }) => {
   ]);
 
   const fetchFavourites = async () => {
-    console.log("fetchFavourites in search-screen");
+    //console.log("fetchFavourites in search-screen");
     const { data, error } = await supabase
       .from("favourite")
       .select(`product`)
       .eq("user", userId);
     setFavouriteProducts([...data.map((a) => a.product)]);
-    console.log(`fetchFavourites ${[...data.map((a) => a.product)]}`);
+    console.log(`fetchFavourites in search-screen ${[...data.map((a) => a.product)]}`);
     //console.log(data.map((a) => a.product));
   };
 

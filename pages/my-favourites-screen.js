@@ -41,7 +41,7 @@ const MyFavouritesScreen = ({ navigation }) => {
   }, []);
 
   const fetchFavourites = async () => {
-    console.log("fetchFavourites in my-favourites-screen");
+    //console.log("fetchFavourites in my-favourites-screen");
     const { data, error } = await supabase
       .from("favourite")
       .select(`product (*)`)
@@ -49,6 +49,8 @@ const MyFavouritesScreen = ({ navigation }) => {
     //console.log(data);
     setProducts([...data.map((a) => a.product)]);
     setFavouriteProducts([...data.map((a) => a.product.id)]);
+    console.log(`fetchFavourites in my-favourites-screen ${[...data.map((a) => a.product.id)]}`);
+
   };
 
   const onFavourite = (data, isFavourite) => {
