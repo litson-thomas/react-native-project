@@ -7,7 +7,8 @@ import { supabase } from "../utils/initSupabase";
 import { commonStyles } from '../theme/styles';
 import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { pushToUserCart } from "../redux/actions";
 
 
 
@@ -21,6 +22,8 @@ const DetailScreen = ({ navigation, route }) => {
     const [favouriteProducts, setFavouriteProducts] = useState([]);
     var isFavourite = favouriteProducts.includes(product.id) ? 'heart' : 'heart-o';
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
 
         fetchProduct(route.params?.id);
@@ -29,7 +32,29 @@ const DetailScreen = ({ navigation, route }) => {
     }, [route.params?.id]);
 
 
-
+    const saveToCart = async () => {
+        const { error } = await supabase
+            .from("shopping_cart")
+            .insert([
+                {
+                    product: product.id,
+                    customer: userId,
+                    quantity: 1,
+                    price: product.price,
+                },
+            ]);
+        if (error) {
+            console.log("error DetailsCartAdd", error);
+        } else {
+            dispatch(pushToUserCart({
+                product: product.id,
+                customer: userId,
+                quantity: 1,
+                price: product.price,
+            }));
+            navigation.navigate('Cart', { userId: userId })
+        }
+    };
 
     const onFavourite = (data, isFavourite) => {
         if (isFavourite === "heart-o") {
@@ -149,10 +174,10 @@ const DetailScreen = ({ navigation, route }) => {
                             <Text style={styles.desc}>{product.description}</Text>
                         </View>
                         <View style={styles.btncontainer}>
-                            <TouchableOpacity
-                                //onPress={onApply}
-                                style={[styles.button, { backgroundColor: lightColors.dark }]}
-                            >
+                            <TouchableOpacity onPress={saveToCart}
+
+                                style={[styles.button, { backgroundColor: lightColors.dark }]}>
+
                                 <Text style={{
                                     color: lightColors.light,
                                 }}>Add to Cart</Text>

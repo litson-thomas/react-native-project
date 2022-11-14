@@ -6,6 +6,9 @@ import {
   SET_USER_EMAIL,
   SET_USER_IMAGE,
   SET_USER_FAVOURITES,
+  SET_USER_CART,
+  PUSH_TO_USER_CART,
+  SET_ITEM_QTY,
 } from "./actions";
 
 const initialState = {
@@ -16,6 +19,8 @@ const initialState = {
   userEmail: "",
   userImage: "",
   userFavourites: [],
+  userCart: [],
+  itemQty: "",
 };
 
 function userReducer(state = initialState, action) {
@@ -34,6 +39,12 @@ function userReducer(state = initialState, action) {
       return { ...state, userImage: action.payload };
     case SET_USER_FAVOURITES:
       return { ...state, userFavourites: action.payload };
+    case SET_USER_CART:
+      return { ...state, userCart: action.payload };
+    case PUSH_TO_USER_CART:
+      return { ...state, userCart: state.userCart.concat(action.payload) };
+    case SET_ITEM_QTY:
+      return { ...state, itemQty: action.payload };
     default:
       return state;
   }
