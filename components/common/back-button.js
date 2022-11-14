@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { lightColors } from '../../theme/colors';
+import { commonStyles } from '../../theme/styles';
 
 const BackButton = ({ navigation }) => {
     return (
@@ -21,7 +22,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 10,
         backgroundColor: lightColors.light,
         width: 40,
         height: 40,

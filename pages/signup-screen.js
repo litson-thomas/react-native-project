@@ -44,6 +44,7 @@ const SignUpScreen = ({ navigation }) => {
         first_name: firstName,
         last_name: lastName,
         role: "Member",
+        email: email,
       });
       dispatch(setUserId(data.id));
       dispatch(setUserFirstName(firstName));

@@ -15,8 +15,17 @@ import { Feather } from "@expo/vector-icons";
 import AdminScreen from "../pages/admin/admin-screen";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/initSupabase";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUserFirstName, setUserId, setUserLastName, setUserRole } from "../redux/actions";
+import Categories from "../pages/admin/category/categories";
+import AddCategory from "../pages/admin/category/add-categories";
+import AddProduct from "../pages/admin/products/add-product";
+import Products from "../pages/admin/products/products";
+import Users from "../pages/admin/users/users";
+import ViewUser from "../pages/admin/users/viewUser";
+import Orders from "../pages/admin/orders/orders";
+import AddOrder from "../pages/admin/orders/add-order";
+import Sales from "../pages/admin/sales";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -37,6 +46,7 @@ export const AppNavigation = () => {
     // from the local storage
     const checkSession = async () => {
       let status = await getSessionInfoFromLocal();
+      // console.log("status", status);
       if (status) {
         setUser(status);
       }
@@ -117,12 +127,16 @@ export const AppNavigation = () => {
                 listeners={{ focus: () => LightHaptics() }}
                 options={navigationOptions}
               />
-              <Stack.Screen
-                name="AdminPanel"
-                component={AdminScreen}
-                listeners={{ focus: () => LightHaptics() }}
-                options={navigationOptions}
-              />
+              <Stack.Screen name="AdminPanel" component={AdminScreen} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="Categories" component={Categories} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="AddCategory" component={AddCategory} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="Products" component={Products} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="AddProduct" component={AddProduct} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="Users" component={Users} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="ViewUser" component={ViewUser} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="Orders" component={Orders} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="AddOrder" component={AddOrder} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="Sales" component={Sales} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
             </>
           )
         }
