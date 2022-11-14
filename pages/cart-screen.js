@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { lightColors } from '../theme/colors';
 import { StatusBar } from 'expo-status-bar';
 import BackButton from '../components/common/back-button';
@@ -7,7 +7,6 @@ import CartItemCard from '../components/home/cart-item-card';
 import { supabase } from "../utils/initSupabase";
 import { useEffect } from 'react';
 import {
-    setUserId,
     setUserCart
 } from "../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,29 +50,14 @@ const CartScreen = ({ navigation, route }) => {
 
         }
     };
-
-
-    return (
-        <View style={styles.container}>
-            <StatusBar style="auto" />
-            <SafeAreaView>
-                <Text style={styles.title}>Cart</Text>
-
-                {
-                    userCart && userCart.length > 0 && userCart.map((item, index) => {
-                        return <View>
-                            <CartItemCard key={index} item={item} />
-
-                        </View>
-                    })
-                }
-
-
+    const details = () => {
+        return (
+            <View>
                 <View style={styles.detailsWrapper}>
 
                     <View style={styles.textContainer}>
                         <Text>Total</Text>
-                        <Text style={styles.text}>$882</Text>
+                        <Text style={styles.text}>$0</Text>
 
                     </View>
                     <View style={styles.textContainer}>
@@ -102,10 +86,56 @@ const CartScreen = ({ navigation, route }) => {
 
                     </View>
                 </View>
-                <TouchableOpacity style={styles.checkOutButton} onPress={() => navigation.navigate('CheckOut')}>
+                <TouchableOpacity
+                    disabled={userCart.length === 0}
+                    enabled={userCart.length > 0}
+                    style={styles.checkOutButton}
+                    onPress={() => {
+                        navigation.navigate("CheckOut");
+                    }}
+                >
                     <Text style={styles.buttonText}>Checkout</Text>
                 </TouchableOpacity>
 
+
+            </View>
+        );
+
+
+    }
+    const emptyList = ({ item }) => {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Text>No Data Found</Text>
+            </View>
+        );
+    };
+    return (
+        <View style={styles.container}>
+            <StatusBar style="auto" />
+            <SafeAreaView>
+                <Text style={styles.title}>Cart</Text>
+
+
+                <FlatList
+                    data={userCart}
+                    renderItem={({ item }) => (
+                        <CartItemCard
+                            item={item}
+                            navigation={navigation}
+                            route={route}
+                        />
+                    )}
+                    keyExtractor={(item) => item.id}
+                    ListEmptyComponent={emptyList}
+                    showsVerticalScrollIndicator={true}
+                    ListFooterComponent={details} />
             </SafeAreaView>
         </View >
     );
