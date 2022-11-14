@@ -15,7 +15,7 @@ const initialState = {
   userFirstName: "",
   userLastName: "",
   userId: "",
-  useRole: "",
+  userRole: "",
   userEmail: "",
   userImage: "",
   userFavourites: [],

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -23,7 +23,7 @@ import { Feather } from "@expo/vector-icons";
 import { removeSessionInfoFromLocal } from "../helpers/common";
 
 const PersonScreen = ({ navigation }) => {
-  const { userId, userFirstName } = useSelector((state) => state.userReducer);
+  const { userId, userFirstName, userRole } = useSelector((state) => state.userReducer);
 
   const dispatch = useDispatch();
 
@@ -41,6 +41,10 @@ const PersonScreen = ({ navigation }) => {
     };
     const result = logout().catch(console.error);
   };
+
+  useEffect(() => {
+    console.log(userRole)
+  }, [userRole]);
 
   const onLogin = (a) => {
     navigation.navigate("LoginModal");
@@ -91,14 +95,14 @@ const PersonScreen = ({ navigation }) => {
           {PersonSingleLink("My Profile", "user", () =>
             navigation.navigate("MyProfileModal")
           )}
-          {PersonSingleLink("My Orders", "shopping-bag", () => {})}
-          {PersonSingleLink("Admin Panel", "database", () =>
-            navigation.navigate("AdminPanel")
-          )}
+          {PersonSingleLink("My Orders", "shopping-bag", () => {navigation.navigate("MyOrders")})}
+          {
+            userRole == "Admin" && PersonSingleLink("Admin Panel", "database", () => navigation.navigate("AdminPanel"))
+          }
           {PersonSingleLink("Settings", "settings", () => {})}
           {PersonSingleLink("Help", "help-circle", () => {})}
           {PersonSingleLink("About", "info", () => {})}
-          {userId === "" ? loginButton() : logoutButton()}
+          {logoutButton()}
         </View>
       </SafeAreaView>
     </View>

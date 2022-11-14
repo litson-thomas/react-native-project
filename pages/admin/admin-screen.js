@@ -4,8 +4,11 @@ import DynamicForm from '../../components/common/dynamic-form';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
 import { Feather } from '@expo/vector-icons'; 
+import { useSelector } from 'react-redux';
+import BackButton from '../../components/common/back-button';
 
 const AdminScreen = (props) => {
+    const { useRole } = useSelector((state) => state.userReducer);
 
     const PersonSingleLink = (title, icon, onClick) => {
         return <TouchableOpacity style={styles.linkWrapper} onPress={onClick}>
@@ -18,6 +21,7 @@ const AdminScreen = (props) => {
     return (
         <View style={commonStyles.mainContainer}>
             <SafeAreaView>
+                <BackButton navigation={props.navigation}/>
                 <Text style={{...commonStyles.mainHeading, marginTop: 10}}>Admin Panel</Text>
                 {PersonSingleLink("Sales", "pie-chart", () => {props.navigation.navigate("Sales")})}
                 {PersonSingleLink("Categories", "filter", () => {props.navigation.navigate("Categories")})}

@@ -3,8 +3,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
+import Constants from "expo-constants";
 
-const ItemCard = ({ navigation }) => {
+const ItemCard = ({ navigation, item }) => {
     
     const [borderColor, setBorderColor] = useState(lightColors.light);
 
@@ -17,7 +18,7 @@ const ItemCard = ({ navigation }) => {
     }
 
     return (
-        <TouchableOpacity onPressIn={onCardClick} onPressOut={onCardPressOut} onPress={() => {navigation.navigate('DetailModal')}}>
+        <TouchableOpacity onPressIn={onCardClick} onPressOut={onCardPressOut} onPress={() => {navigation?.navigate('DetailModal', { id: item?.id});}}>
             <View style={{...styles.cardWrapper, ...{borderWidth: 2, borderColor: borderColor}}}>
                 <View style={styles.header}>
                     <View style={styles.ratingWrapper}>
@@ -28,11 +29,11 @@ const ItemCard = ({ navigation }) => {
                         <FontAwesome name="heart-o" size={20} color={lightColors.primary} />
                     </TouchableOpacity>
                 </View>
-                <Image style={styles.image} source={require('../../assets/images/shoe.png')}/>
+                <Image style={styles.image} source={{uri: `${Constants.expoConfig.extra.productUrl}/${item?.images[0]}`,}}/>
                 <View style={styles.detailsWrapper}>
-                    <Text style={styles.title}>Nike Air Max</Text>
-                    <Text style={styles.subTitle} numberOfLines={3}>Regular Shoes</Text>
-                    <Text style={styles.price}>$120</Text>
+                    <Text style={styles.title} numberOfLines={1}>{item?.name}</Text>
+                    <Text style={styles.subTitle} numberOfLines={3}>{item?.category?.name}</Text>
+                    <Text style={styles.price}>${item?.price}</Text>
                 </View>
             </View>
         </TouchableOpacity>

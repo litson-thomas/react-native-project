@@ -3,8 +3,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
+import Constants from "expo-constants";
 
-const SimpleItemCard = ({ navigation }) => {
+const SimpleItemCard = ({ navigation, item }) => {
 
     const [borderColor, setBorderColor] = useState(lightColors.light);
 
@@ -17,14 +18,14 @@ const SimpleItemCard = ({ navigation }) => {
     }
 
     return (
-        <TouchableOpacity onPressIn={onCardClick} onPressOut={onCardPressOut} onPress={() => {navigation.navigate('DetailModal')}}>
+        <TouchableOpacity onPressIn={onCardClick} onPressOut={onCardPressOut} onPress={() => {navigation?.navigate('DetailModal', { id: item?.id});}}>
             <View style={{...styles.cardWrapper, ...{borderWidth: 2, borderColor: borderColor}}}>
-                <Image style={styles.image} source={require('../../assets/images/shoe.png')}/>
+                <Image style={styles.image} source={{uri: `${Constants.expoConfig.extra.productUrl}/${item?.images[0]}`,}}/>
                 <View style={styles.detailsWrapper}>
-                    <Text style={styles.title}>Nike Air Max</Text>
-                    <Text style={styles.subTitle}>Regular Shoes</Text>
+                    <Text style={styles.title} numberOfLines={1}>{item?.name}</Text>
+                    <Text style={styles.subTitle} numberOfLines={1}>{item?.category?.name}</Text>
                 </View>
-                <Text style={styles.price}>$120</Text>
+                <Text style={styles.price}>${item?.price}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         marginTop: 15,
+        flex: 1,
     },
     image: {
         width: 80,
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         marginLeft: 5,
         marginRight: 10,
+        flex: 1,
     },
     title: {
         fontSize: 15,

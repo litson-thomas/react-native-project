@@ -19,7 +19,7 @@ const AddOrder = (props) => {
     let [orderDate, setOrderDate] = useState(new Date())
     let [editingItem, setEditingItem] = useState(null);
     let [initialValues, setInitialValues] = useState({});
-    let [selectOpen, setSelectOpen] = useState([false, false, false]);
+    let [selectOpen, setSelectOpen] = useState([false, false, false, false, false, false]);
 
     const dispatch = useDispatch();
 

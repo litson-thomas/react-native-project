@@ -19,7 +19,7 @@ const AddProduct = (props) => {
     let [editingItem, setEditingItem] = useState(null);
     let [initialValues, setInitialValues] = useState({});
     let [uploadingImage, setUploadingImage] = useState(null);
-    let [selectOpen, setSelectOpen] = useState([false]);
+    let [selectOpen, setSelectOpen] = useState([false, false, false, false, false]);
     let [sizes, setSizes] = useState([
         { label: "S", value: "S", selected: false }, 
         { label: "M", value: "M", selected: false },
@@ -92,9 +92,9 @@ const AddProduct = (props) => {
     }, []);
 
     const setDefaultValues = () => {
-        setInitialValues(props.route.params.item);
+        setInitialValues({...props.route.params.item});
         // set the price
-        setInitialValues({...props.route.params.item, price: props.route.params.item.price.toString()});
+        setInitialValues({...props.route.params.item, price: props.route.params.item.price.toString(), category: props.route.params.item.category.id});
         // set the sizes
         setSizes(sizes.map((item) => {
             if(props.route.params.item.sizes.includes(item.value)) return {...item, selected: true};
@@ -201,6 +201,87 @@ const AddProduct = (props) => {
                                         />
                                     </View>
                                 }
+
+                                <Text style={formStyles.label}>Is Featured</Text>
+                                <DropDownPicker
+                                    style={styles.dropdown}
+                                    value={initialValues['is_featured']}
+                                    listMode="MODAL"
+                                    open={selectOpen[1]}
+                                    onClose={() => {setSelectOpen([...selectOpen.map((item, i) => i === 1 ? !item : item)])}}
+                                    onPress={() => {setSelectOpen([...selectOpen.map((item, i) => i === 1 ? !item : item)])}}
+                                    onSelectItem={(item) => {
+                                        setInitialValues({...initialValues, is_featured: item.value});
+                                        setSelectOpen([...selectOpen.map((x, i) => i === 1 ? false : x)])
+                                    }}
+                                    items={[
+                                        {label: 'Yes', value: true},
+                                        {label: 'No', value: false},
+                                    ]}
+                                    placeholder={'Is Featured'}
+                                    placeholderStyle={styles.dropdownPlaceholder}
+                                    zIndex={10000}
+                                    modalTitle={'Is Featured'}
+                                    modalProps={{
+                                        animationType: 'slide',
+                                        hardwareAccelerated: true,
+                                    }}
+                                    dropDownDirection="DOWN"
+                                />
+
+                                <Text style={formStyles.label}>Is Slider</Text>
+                                <DropDownPicker
+                                    style={styles.dropdown}
+                                    value={initialValues['is_slider']}
+                                    listMode="MODAL"
+                                    open={selectOpen[2]}
+                                    onClose={() => {setSelectOpen([...selectOpen.map((item, i) => i === 2 ? !item : item)])}}
+                                    onPress={() => {setSelectOpen([...selectOpen.map((item, i) => i === 2 ? !item : item)])}}
+                                    onSelectItem={(item) => {
+                                        setInitialValues({...initialValues, is_slider: item.value});
+                                        setSelectOpen([...selectOpen.map((x, i) => i === 2 ? false : x)])
+                                    }}
+                                    items={[
+                                        {label: 'Yes', value: true},
+                                        {label: 'No', value: false},
+                                    ]}
+                                    placeholder={'Is Slider'}
+                                    placeholderStyle={styles.dropdownPlaceholder}
+                                    zIndex={10000}
+                                    modalTitle={'Is Slider'}
+                                    modalProps={{
+                                        animationType: 'slide',
+                                        hardwareAccelerated: true,
+                                    }}
+                                    dropDownDirection="DOWN"
+                                />
+
+                                <Text style={formStyles.label}>Is Top Selling</Text>
+                                <DropDownPicker
+                                    style={styles.dropdown}
+                                    value={initialValues['is_top_selling']}
+                                    listMode="MODAL"
+                                    open={selectOpen[3]}
+                                    onClose={() => {setSelectOpen([...selectOpen.map((item, i) => i === 3 ? !item : item)])}}
+                                    onPress={() => {setSelectOpen([...selectOpen.map((item, i) => i === 3 ? !item : item)])}}
+                                    onSelectItem={(item) => {
+                                        setInitialValues({...initialValues, is_top_selling: item.value});
+                                        setSelectOpen([...selectOpen.map((x, i) => i === 3 ? false : x)])
+                                    }}
+                                    items={[
+                                        {label: 'Yes', value: true},
+                                        {label: 'No', value: false},
+                                    ]}
+                                    placeholder={'Is Top Selling'}
+                                    placeholderStyle={styles.dropdownPlaceholder}
+                                    zIndex={10000}
+                                    modalTitle={'Is Top Selling'}
+                                    modalProps={{
+                                        animationType: 'slide',
+                                        hardwareAccelerated: true,
+                                    }}
+                                    dropDownDirection="DOWN"
+                                />
 
                                 <Text style={formStyles.label}>Select Product Image</Text>
                                 <TouchableOpacity style={styles.imageUploadWrapper} onPress={() => selectImage()}>

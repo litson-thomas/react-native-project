@@ -2,39 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { lightColors } from '../../theme/colors';
 import { commonStyles } from '../../theme/styles';
+import Constants from "expo-constants";
 
-const DATA = [
-    {id: 1, image: require('../../assets/images/shoe-2.png'), title: 'Nike Air Max 270', price: '$120', subTitle: 'Regular Shoes'},
-    {id: 2, image: require('../../assets/images/shoe-3.png'), title: 'Nike Men\'s Fly Vision', price: '$84', subTitle: 'Sneakers'},
-    {id: 3, image: require('../../assets/images/shoe-4.png'), title: 'Nike Court Vision Low', price: '$199', subTitle: 'Sneakers'},
-];
+const Featured = ({ navigation, featured }) => {
 
-const Featured = ({ navigation }) => {
-
-    let [item, setItem] = useState(DATA[0]);
+    let [item, setItem] = useState(featured[0]);
     let interval = null;
     let itemIndex = 0;
 
     useEffect(() => {
+        setItem(featured[0]);
+        console.log('featured', featured);
         interval = setInterval(() => {
             // loop through the items
             itemIndex++;
-            if (itemIndex > DATA.length - 1) itemIndex = 0;
-            setItem(DATA[itemIndex]);
+            if (itemIndex > featured.length - 1) itemIndex = 0;
+            setItem(featured[itemIndex]);
         }, 2500);
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <TouchableOpacity onPress={() => {navigation?.navigate('DetailModal')}}>
+        <TouchableOpacity onPress={() => {navigation?.navigate('DetailModal', { id: item?.id});}}>
             <View style={styles.container}>
-                <View style={styles.textContainer}>
-                    <Text style={{...styles.title}}>{item.title}</Text>
-                    <Text style={styles.price}>{item.price}</Text>
-                    <Text style={styles.subTitle}>{item.subTitle}</Text>
-                </View>
                 <View style={styles.imageContainer}>
-                    <Image style={styles.image} source={item.image} />
+                    <Image 
+                    style={{...styles.image}} source={{uri: `${Constants.expoConfig.extra.productUrl}/${item?.images[0]}`,}} />
+                </View>
+                <View style={styles.textContainer}>
+                    <Text style={{...styles.title}}>{item?.name}</Text>
+                    <Text style={styles.price}>${item?.price}</Text>
+                    <Text style={styles.subTitle}>{item?.category.name}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -47,6 +45,9 @@ const styles = StyleSheet.create({
     container: {
         borderBottomEndRadius: lightColors.borderRadius,
         borderBottomStartRadius: lightColors.borderRadius,
+        backgroundColor: lightColors.light,
+        marginHorizontal: 20,
+        marginBottom: 10,
     },
     imageContainer: {
         width: "100%",
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        width: '80%',
+        width: '85%',
         fontSize: 40,
         color: lightColors.dark,
         fontFamily: commonStyles.fontExtraBold,

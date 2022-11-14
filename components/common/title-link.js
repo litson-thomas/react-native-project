@@ -7,9 +7,9 @@ const TitleLink = ({ navigation, title, url }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
-            <TouchableOpacity onPress={() => {navigation.navigate(url)}}>
+            {/* <TouchableOpacity onPress={() => {navigation.navigate(url)}}>
                 <Text style={styles.viewAll}>View all</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 }

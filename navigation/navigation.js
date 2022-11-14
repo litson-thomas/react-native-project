@@ -29,6 +29,7 @@ import { setUserEmail, setUserFirstName, setUserId, setUserLastName, setUserRole
 import MyProfileScreen from "../pages/my-profile-screen";
 import MyFavouritesScreen from "../pages/my-favourites-screen";
 import CheckOutScreen from "../pages/check-out-screen";
+import MyOrders from "../pages/my-orders";
 
 let navigationOptions = {
   headerBackButtonMenuEnabled: false,
@@ -164,6 +165,7 @@ export const AppNavigation = () => {
               <Stack.Screen name="Orders" component={Orders} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
               <Stack.Screen name="AddOrder" component={AddOrder} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
               <Stack.Screen name="Sales" component={Sales} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
+              <Stack.Screen name="MyOrders" component={MyOrders} listeners={{ focus: () => LightHaptics() }} options={navigationOptions}/>
             </>
           )
         }
