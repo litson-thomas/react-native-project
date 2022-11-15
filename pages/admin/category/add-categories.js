@@ -54,7 +54,7 @@ const AddCategory = (props) => {
             <SafeAreaView>
                 <BackButton navigation={props.navigation}/>
                 <View style={styles.header}>
-                    <Text style={{...commonStyles.mainHeading, marginTop: 10}}>Add Category</Text>
+                    <Text style={{...commonStyles.mainHeading, marginTop: 10}}> {isEdit ? `Edit Category`: `Add Category`}</Text>
                 </View>
                 
                 {/* FORM STARTS */}
@@ -80,7 +80,7 @@ const AddCategory = (props) => {
                             </View>
 
                             <TouchableOpacity onPress={handleSubmit} style={formStyles.submitButton}>
-                                <Text style={formStyles.buttonText}>Create</Text>
+                                <Text style={formStyles.buttonText}>{isEdit ? `Update`: `Create`}</Text>
                             </TouchableOpacity>
 
                         </View>
