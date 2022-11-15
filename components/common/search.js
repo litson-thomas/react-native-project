@@ -9,7 +9,7 @@ const Search = ({searchString,onSearch}) => {
         <View style={styles.inputWrapper}>
             <TextInput 
             placeholderTextColor={lightColors.grey}
-            placeholder='Enter product name' style={styles.input} value={searchString} onChangeText={onSearch.bind(this)} />
+            placeholder='Enter name' style={styles.input} value={searchString} onChangeText={onSearch.bind(this)} />
             <Feather name="search" size={23} style={styles.icon} color={lightColors.grey} />
         </View>
     );
