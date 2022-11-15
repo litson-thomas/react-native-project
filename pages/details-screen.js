@@ -66,12 +66,14 @@ const DetailScreen = ({ navigation, route }) => {
       console.log("error DetailsCartAdd", error);
     } else {
       dispatch(
-        pushToUserCart({
-          product: product.id,
-          customer: userId,
-          quantity: 1,
-          price: product.price,
-        })
+        pushToUserCart([
+          {
+            product: product,
+            customer: userId,
+            quantity: 1,
+            price: product.price,
+          }
+        ])
       );
       navigation.navigate("Cart", { userId: userId });
     }

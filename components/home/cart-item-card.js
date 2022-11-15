@@ -12,9 +12,10 @@ import {
 } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 
-const CartItemCard = ({ navigation, route, item,index, onQuantityUpdate }) => {
+const CartItemCard = ({ navigation, route, item,index,itemId, onQuantityUpdate }) => {
     const [cartProducts, setCartProducts] = useState([]);
     const [quantity, setQuantity] = useState(1);
+    let [id, setId] = useState(item.id);
     const [borderColor, setBorderColor] = useState(lightColors.light);
     const dispatch = useDispatch();
     const { userCart } = useSelector((state) => state.userReducer);
@@ -27,7 +28,7 @@ const CartItemCard = ({ navigation, route, item,index, onQuantityUpdate }) => {
         setBorderColor(lightColors.light);
     }
     useEffect(() => {
-        // console.log(quantity, item)
+        console.log('asdasdas asd aa ' + quantity, itemId)
         getProductItems();
     }, []);
 
@@ -38,19 +39,23 @@ const CartItemCard = ({ navigation, route, item,index, onQuantityUpdate }) => {
     }, [quantity]);
 
     const updateQuantityInDb = async (quantity) => {
-        const { data, error } = await supabase
-            .from("shopping_cart")
-            .update({
-                ...item,
-                quantity: quantity
-            })
-            .eq("id", item.id);
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(quantity)
-            onQuantityUpdate(`${9}`)
-        }
+        console.log(quantity)
+        // console.log("updateQuantityInDb", itemId);
+        // let obj = item;
+        // delete obj.id;
+        // const { data, error } = await supabase
+        //     .from("shopping_cart")
+        //     .update({
+        //         quantity: Number(quantity)
+        //     })
+        //     .eq("id", itemId);
+        // if (error) {
+        //     // console.log("ERROR WHILE UPDATTING QUANITYT" + error.message);
+        // } else {
+        //     // console.log(quantity)
+        //     onQuantityUpdate(`${9}`)
+        // }
+        onQuantityUpdate(quantity)
     }
 
     const getProductItems = async () => {
@@ -80,8 +85,7 @@ const CartItemCard = ({ navigation, route, item,index, onQuantityUpdate }) => {
 
 
         <View  style={{ ...styles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
-            <SafeAreaView>
-                {
+            {
                     cartProducts && cartProducts.length > 0 && cartProducts.map((item, index) => {
                         return <View key={item.id}>
 
@@ -111,10 +115,6 @@ const CartItemCard = ({ navigation, route, item,index, onQuantityUpdate }) => {
                         </View>
                     })
                 }
-
-
-            </SafeAreaView>
-
         </View>
 
 

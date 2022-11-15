@@ -133,7 +133,7 @@ export const AppNavigation = () => {
                 name="FilterModal"
                 component={FilterScreen}
                 listeners={{ focus: () => LightHaptics() }}
-                options={navigationOptions}
+                options={{...navigationOptions, presentation: "fullScreenModal"} }
               />
               {/* <Stack.Screen
                 name="AdminPanel"

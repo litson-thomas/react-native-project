@@ -15,6 +15,7 @@ import Checkbox from "expo-checkbox";
 import FilterButtons from "../components/search/filter-buttons";
 import Slider from "@react-native-community/slider";
 import { commonStyles } from "../theme/styles";
+import BackButton from "../components/common/back-button";
 
 const FilterScreen = ({ navigation, route }) => {
   const [productTypes, setProductTypes] = useState([]);
@@ -134,8 +135,9 @@ const FilterScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <BackButton navigation={navigation}/>
       <SafeAreaView>
-        <Text style={styles.title}>Filters</Text>
+        <Text style={{...styles.title, marginTop: 15}}>Filters</Text>
         <View style={styles.cardWrapper}>
           <View style={styles.header}>
             <Text style={styles.subTitle}>Types</Text>

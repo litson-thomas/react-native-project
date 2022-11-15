@@ -6,6 +6,7 @@ import BackButton from '../components/common/back-button';
 import CartItemCard from '../components/home/cart-item-card';
 import { supabase } from "../utils/initSupabase";
 import { useEffect } from 'react';
+import Constants from "expo-constants";
 import {
     setUserCart
 } from "../redux/actions";
@@ -13,43 +14,110 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from 'react';
 import { TabRouter } from '@react-navigation/native';
 import { GoTrueAdminApi } from '@supabase/supabase-js';
+import { commonStyles } from '../theme/styles';
 
 const CartScreen = ({ navigation, route }) => {
-
+    const [borderColor, setBorderColor] = useState(lightColors.light);
     const [cartProducts, setCartProducts] = useState([]);
+    let [priceDetails, setPriceDetails] = useState({
+        total: 0,
+        devlivery: 0,
+        grandTotal: 0
+    });
     const { userId, userCart } = useSelector((state) => state.userReducer);
+    let [cartItems, setCartItems] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
-      //  if (userCart.length > 0) {
-            fetchCartItems();
-       // }
-
+        console.log('CartScreen useEffect');
+        getCartItems();
+        return () => {
+            console.log('CartScreen useEffect cleanup');
+            setCartItems([]);
+        }
     }, []);
 
-    useEffect(() => {
-        console.log("userCart changed", userCart);
-    }, [userCart]);
-
-    useEffect(() => {
-        dispatch(setUserCart([...cartProducts]));
-    }, [cartProducts]);
-
-    const fetchCartItems = async () => {
+    const getCartItems = async () => {
         const { data, error } = await supabase
             .from("shopping_cart")
-            .select(`*`)
+            .select(`
+                *,
+                product (
+                    *
+                )
+            `)
             .eq("customer", userId);
         if (error) {
-            console.log(error);
+            console.log("ERROR WHILE FETCHING CART ITEMS" + error.message);
         } else {
-            // console.log("Succesfully get cart items");
-
-            setCartProducts([...data]);
-            // console.log("cart items", data);
-
+            dispatch(setUserCart(data));
+            setCartItems(data);
         }
-    };
+    }
+
+    useEffect(() => {
+        
+    }, [cartItems]);
+
+    useEffect(() => {
+        // console.log("userCart", userCart.map((a) => a.product.name));
+        setCartItems(userCart);
+    }, [userCart]);
+
+    const cartItem = (item, index) => {
+        return <View  style={{ ...itemStyles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
+            <View key={item.id}>
+                <View style={itemStyles.detailsWrapper}>
+                    <Image style={itemStyles.image} source={{
+                        uri: `${Constants.expoConfig.extra.productUrl}/${item.product.images[0]}`,
+                    }} />
+                    <Text style={itemStyles.title}>{item.product.name}</Text>
+                    <Text style={itemStyles.price}>${item.product.price}</Text>
+                </View>
+                <View style={itemStyles.buttonWrapper}>
+                    <TouchableOpacity style={itemStyles.button} onPress={() => {
+                        setCartItems(cartItems.map((x) => x.id == item.id) ? cartItems.map((x) => x.id == item.id ? { ...x, quantity: x.quantity - 1 } : x) : cartItems);
+                    }}>
+                        <Text style={itemStyles.buttonText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={itemStyles.itemsCount}>{item.quantity}</Text>
+                    <TouchableOpacity style={itemStyles.button} onPress={() => {
+                        setCartItems(cartItems.map((x) => x.id == item.id) ? cartItems.map((x) => x.id == item.id ? { ...x, quantity: x.quantity + 1 } : x) : cartItems);
+                    }}>
+                        <Text style={itemStyles.buttonText}>+</Text>
+                    </TouchableOpacity >
+                </View>
+                </View>
+        </View>
+    }
+
+    const addOrder = async () => {
+        // add new order
+        for (let i = 0; i < cartItems.length; i++) {
+            const item = cartItems[i];
+            const { data, error } = await supabase
+            .from('order_detail')
+            .insert([{ 
+                id: new Date().getTime(),
+                user: item.customer.toString(),
+                quantity: 1,
+                customer_order: null,
+                order_date: new Date(),
+                status: "pending",
+                size: 'M',
+                product: Number(item.product.id)
+            }])
+            if (error) {
+                console.log(error.message);
+            }
+            if(data) {
+                console.log(data);
+            }
+        }
+        setCartItems([]);
+        navigation.navigate("Home");
+    }
+
     const details = () => {
         return (
             <View>
@@ -57,41 +125,47 @@ const CartScreen = ({ navigation, route }) => {
 
                     <View style={styles.textContainer}>
                         <Text>Total</Text>
-                        <Text style={styles.text}>$0</Text>
+                        <Text style={styles.text}>${
+                            cartItems.map((item) => {
+                                return item.product.price * item.quantity
+                            }).reduce((a, b) => a + b, 0)
+                        }</Text>
 
                     </View>
                     <View style={styles.textContainer}>
                         <Text>Delivery</Text>
-                        <Text style={styles.text}>$13</Text>
-
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text>Tax Amount</Text>
-                        <Text style={styles.text}>0</Text>
-
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text>HST</Text>
-                        <Text style={styles.text}>$5</Text>
-
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text>GST</Text>
-                        <Text style={styles.text}>$12</Text>
+                        <Text style={styles.text}>${
+                            0
+                        }</Text>
 
                     </View>
                     <View style={styles.textContainer}>
                         <Text>Grand Total</Text>
-                        <Text style={styles.text}>$1000</Text>
-
+                        <Text style={styles.text}>${
+                            cartItems.map((item) => {
+                                return item.product.price * item.quantity
+                            }).reduce((a, b) => a + b, 0)
+                        }</Text>
                     </View>
                 </View>
                 <TouchableOpacity
-                    disabled={userCart.length === 0}
-                    enabled={userCart.length > 0}
+                    disabled={cartItems.length === 0}
+                    enabled={cartItems.length > 0}
                     style={styles.checkOutButton}
-                    onPress={() => {
-                        navigation.navigate("CheckOut");
+                    onPress={async () => {
+                        // delete the cart items
+                        const { data, error } = await supabase
+                            .from("shopping_cart")
+                            .delete()
+                            .eq("customer", userId);
+                        if (error) {
+                            console.log(error);
+                            alert("Unable to process the payment");
+                        } else {
+                            // ToastAndroid.show("Payment successful", ToastAndroid.SHORT);
+                            console.log("Succesfully deleted cart items");
+                        }
+                        addOrder();
                     }}
                 >
                     <Text style={styles.buttonText}>Checkout</Text>
@@ -100,53 +174,105 @@ const CartScreen = ({ navigation, route }) => {
 
             </View>
         );
-
-
     }
-    const emptyList = ({ item }) => {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                <Text>No Data Found</Text>
-            </View>
-        );
-    };
 
-    const onQuantityUpdate = (data) => {
-        // console.log('updated', data);
-        fetchCartItems();
-    }
-   
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
             <SafeAreaView>
-                <Text style={styles.title}>Cart</Text>
-
-
-                <FlatList
-                    data={userCart}
+                <ScrollView>
+                    <Text style={styles.title}>Cart</Text>
+                    <FlatList
+                    data={cartItems}
                     renderItem={({ item, index }) => (
-                        <CartItemCard 
-                            index={index}
-                            item={item}
-                            navigation={navigation}
-                            route={route}
-                            onQuantityUpdate={onQuantityUpdate}
-                        />
+                        cartItem(item, index)
                     )}
-                    keyExtractor={(item) => item.id.toString()}
-                    ListEmptyComponent={emptyList}
-                    showsVerticalScrollIndicator={true}
-                    ListFooterComponent={details} />
+                    keyExtractor={(item) => item?.id}
+                    />
+                    {cartItems && cartItems.length > 0 && details()}
+                </ScrollView>
             </SafeAreaView>
         </View >
     );
+
+    // useEffect(() => {
+    //     fetchCartItems();
+    // }, []);
+
+    // useEffect(() => {
+    //     // console.log("userCart changed", userCart);
+    // }, [userCart]);
+
+    // useEffect(() => {
+    //     dispatch(setUserCart([...cartProducts]));
+    // }, [cartProducts]);
+
+    // const fetchCartItems = async () => {
+    //     // console.log(userId)
+    //     const { data, error } = await supabase
+    //         .from("shopping_cart")
+    //         .select(`
+    //             *,
+    //             product (
+    //                 *
+    //             )
+    //         `)
+    //         .eq("customer", userId);
+    //     if (error) {
+    //         console.log("ERROR WHILE GETTING CART ITEMS = >" + error);
+    //     } else {
+    //         // console.log(data.map(x => x.quantity))
+    //         setCartProducts([...data]);
+    //     }
+    // };
+
+
+    // }
+    // const emptyList = ({ item }) => {
+    //     return (
+    //         <View
+    //             style={{
+    //                 flex: 1,
+    //                 alignItems: "center",
+    //                 justifyContent: "center",
+    //             }}
+    //         >
+    //             <Text>No Data Found</Text>
+    //         </View>
+    //     );
+    // };
+
+    // const onQuantityUpdate = (data) => {
+    //     console.log('updated', data);
+    //     // fetchCartItems();
+    // }
+   
+    // return (
+    //     <View style={styles.container}>
+    //         <StatusBar style="auto" />
+    //         <SafeAreaView>
+    //             <Text style={styles.title}>Cart</Text>
+
+    //             <FlatList
+    //             data={userCart}
+    //             renderItem={({ item, index }) => (
+    //                 <CartItemCard 
+    //                     index={index}
+    //                     item={item}
+    //                     itemId={item.id}
+    //                     navigation={navigation}
+    //                     route={route}
+    //                     onQuantityUpdate={onQuantityUpdate}
+    //                 />
+    //             )}
+    //             keyExtractor={(item) => item?.id}
+    //             ListEmptyComponent={emptyList}
+    //             showsVerticalScrollIndicator={true}
+    //             ListFooterComponent={details} />
+                
+    //         </SafeAreaView>
+    //     </View >
+    // );
 }
 
 export default CartScreen;
@@ -218,4 +344,84 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+});
+
+const itemStyles = StyleSheet.create({
+    cardWrapper: {
+        borderRadius: lightColors.borderRadius,
+        backgroundColor: lightColors.light,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginLeft: 5,
+        marginRight: 5,
+        marginBottom: 10,
+    },
+    image: {
+        width: 80,
+        height: 80,
+        borderRadius: lightColors.borderRadius,
+        backgroundColor: lightColors.light,
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
+    detailsWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        flexGrow: 1,
+        marginLeft: 5,
+        marginRight: 10,
+    },
+    title: {
+        fontSize: 15,
+        fontFamily: commonStyles.fontMedium,
+        color: lightColors.dark,
+    },
+    subTitle: {
+        fontSize: 13,
+        fontFamily: commonStyles.fontRegular,
+        color: lightColors.darkGrey,
+    },
+    buttonWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: lightColors.lightGrey,
+        flexGrow: 1,
+        marginLeft: 5,
+        marginRight: 10,
+        borderRadius: lightColors.borderRadius,
+    },
+    button: {
+        width: 23,
+        height: 23,
+        borderRadius: lightColors.borderRadius,
+        backgroundColor: lightColors.light,
+        marginTop: 5,
+        marginBottom: 5,
+        marginRight: 5,
+        marginLeft: 5,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    },
+    buttonText: {
+        // fontSize: 15,
+        fontFamily: commonStyles.fontMedium,
+    },
+
+    itemsCount: {
+        fontSize: 13,
+        fontFamily: commonStyles.fontMedium,
+        color: lightColors.fontMedium,
+        marginLeft: 5,
+        marginRight: 5,
+    },
 });

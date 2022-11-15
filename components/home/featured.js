@@ -12,7 +12,7 @@ const Featured = ({ navigation, featured }) => {
 
     useEffect(() => {
         setItem(featured[0]);
-        console.log('featured', featured);
+        // console.log('featured', featured);
         interval = setInterval(() => {
             // loop through the items
             itemIndex++;
