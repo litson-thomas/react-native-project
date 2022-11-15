@@ -65,29 +65,29 @@ const CartScreen = ({ navigation, route }) => {
     }, [userCart]);
 
     const cartItem = (item, index) => {
-        return <View  style={{ ...itemStyles.cardWrapper, ...{ borderWidth: 2, borderColor: borderColor } }}>
-            <View key={item.id}>
-                <View style={itemStyles.detailsWrapper}>
-                    <Image style={itemStyles.image} source={{
-                        uri: `${Constants.expoConfig.extra.productUrl}/${item.product.images[0]}`,
-                    }} />
-                    <Text style={itemStyles.title}>{item.product.name}</Text>
-                    <Text style={itemStyles.price}>${item.product.price}</Text>
-                </View>
-                <View style={itemStyles.buttonWrapper}>
-                    <TouchableOpacity style={itemStyles.button} onPress={() => {
-                        setCartItems(cartItems.map((x) => x.id == item.id) ? cartItems.map((x) => x.id == item.id ? { ...x, quantity: x.quantity - 1 } : x) : cartItems);
-                    }}>
-                        <Text style={itemStyles.buttonText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={itemStyles.itemsCount}>{item.quantity}</Text>
-                    <TouchableOpacity style={itemStyles.button} onPress={() => {
-                        setCartItems(cartItems.map((x) => x.id == item.id) ? cartItems.map((x) => x.id == item.id ? { ...x, quantity: x.quantity + 1 } : x) : cartItems);
-                    }}>
-                        <Text style={itemStyles.buttonText}>+</Text>
-                    </TouchableOpacity >
-                </View>
-                </View>
+        return <View key={item.id} style={{...itemStyles.cardWrapper, flex: 1}}>
+            <View style={{...itemStyles.detailsWrapper, flex: 1}}>
+                <Image style={itemStyles.image} source={{
+                    uri: `${Constants.expoConfig.extra.productUrl}/${item.product.images[0]}`,
+                }} />
+            </View>
+            <View style={{...itemStyles.detailsWrapper, flex: 3}}>
+                <Text style={itemStyles.title} numberOfLines={1}>{item.product.name}</Text>
+                <Text style={itemStyles.price}>${item.product.price}</Text>
+            </View>
+            <View style={{...itemStyles.buttonWrapper, flex: 1}}>
+                <TouchableOpacity style={itemStyles.button} onPress={() => {
+                    setCartItems(cartItems.map((x) => x.id == item.id) ? cartItems.map((x) => x.id == item.id ? { ...x, quantity: x.quantity - 1 } : x) : cartItems);
+                }}>
+                    <Text style={itemStyles.buttonText}>-</Text>
+                </TouchableOpacity>
+                <Text style={itemStyles.itemsCount}>{item.quantity}</Text>
+                <TouchableOpacity style={itemStyles.button} onPress={() => {
+                    setCartItems(cartItems.map((x) => x.id == item.id) ? cartItems.map((x) => x.id == item.id ? { ...x, quantity: x.quantity + 1 } : x) : cartItems);
+                }}>
+                    <Text style={itemStyles.buttonText}>+</Text>
+                </TouchableOpacity >
+            </View>
         </View>
     }
 
@@ -100,7 +100,7 @@ const CartScreen = ({ navigation, route }) => {
             .insert([{ 
                 id: new Date().getTime(),
                 user: item.customer.toString(),
-                quantity: 1,
+                quantity: item.quantity,
                 customer_order: null,
                 order_date: new Date(),
                 status: "pending",
@@ -180,7 +180,6 @@ const CartScreen = ({ navigation, route }) => {
         <View style={styles.container}>
             <StatusBar style="auto" />
             <SafeAreaView>
-                <ScrollView>
                     <Text style={styles.title}>Cart</Text>
                     <FlatList
                     data={cartItems}
@@ -190,89 +189,10 @@ const CartScreen = ({ navigation, route }) => {
                     keyExtractor={(item) => item?.id}
                     />
                     {cartItems && cartItems.length > 0 && details()}
-                </ScrollView>
             </SafeAreaView>
-        </View >
+        </View>
     );
 
-    // useEffect(() => {
-    //     fetchCartItems();
-    // }, []);
-
-    // useEffect(() => {
-    //     // console.log("userCart changed", userCart);
-    // }, [userCart]);
-
-    // useEffect(() => {
-    //     dispatch(setUserCart([...cartProducts]));
-    // }, [cartProducts]);
-
-    // const fetchCartItems = async () => {
-    //     // console.log(userId)
-    //     const { data, error } = await supabase
-    //         .from("shopping_cart")
-    //         .select(`
-    //             *,
-    //             product (
-    //                 *
-    //             )
-    //         `)
-    //         .eq("customer", userId);
-    //     if (error) {
-    //         console.log("ERROR WHILE GETTING CART ITEMS = >" + error);
-    //     } else {
-    //         // console.log(data.map(x => x.quantity))
-    //         setCartProducts([...data]);
-    //     }
-    // };
-
-
-    // }
-    // const emptyList = ({ item }) => {
-    //     return (
-    //         <View
-    //             style={{
-    //                 flex: 1,
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //             }}
-    //         >
-    //             <Text>No Data Found</Text>
-    //         </View>
-    //     );
-    // };
-
-    // const onQuantityUpdate = (data) => {
-    //     console.log('updated', data);
-    //     // fetchCartItems();
-    // }
-   
-    // return (
-    //     <View style={styles.container}>
-    //         <StatusBar style="auto" />
-    //         <SafeAreaView>
-    //             <Text style={styles.title}>Cart</Text>
-
-    //             <FlatList
-    //             data={userCart}
-    //             renderItem={({ item, index }) => (
-    //                 <CartItemCard 
-    //                     index={index}
-    //                     item={item}
-    //                     itemId={item.id}
-    //                     navigation={navigation}
-    //                     route={route}
-    //                     onQuantityUpdate={onQuantityUpdate}
-    //                 />
-    //             )}
-    //             keyExtractor={(item) => item?.id}
-    //             ListEmptyComponent={emptyList}
-    //             showsVerticalScrollIndicator={true}
-    //             ListFooterComponent={details} />
-                
-    //         </SafeAreaView>
-    //     </View >
-    // );
 }
 
 export default CartScreen;
@@ -362,11 +282,11 @@ const itemStyles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: lightColors.borderRadius,
-        backgroundColor: lightColors.light,
+        backgroundColor: '#eee',
         marginTop: 5,
         marginBottom: 5,
-        marginLeft: 5,
-        marginRight: 5,
+        // marginLeft: 5,
+        // marginRight: 5,
     },
     detailsWrapper: {
         display: 'flex',
@@ -375,7 +295,7 @@ const itemStyles = StyleSheet.create({
         alignItems: 'flex-start',
         flexGrow: 1,
         marginLeft: 5,
-        marginRight: 10,
+        // marginRight: 10,
     },
     title: {
         fontSize: 15,
@@ -394,6 +314,7 @@ const itemStyles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: lightColors.lightGrey,
         flexGrow: 1,
+        flex: 1,
         marginLeft: 5,
         marginRight: 10,
         borderRadius: lightColors.borderRadius,
